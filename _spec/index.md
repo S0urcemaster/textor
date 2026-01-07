@@ -1,4 +1,4 @@
-# Textor Source Text Editor
+# Textor Text Workstation
 
 ## Project Setup frontend/
 
@@ -10,5 +10,5 @@
 - no lint
 
 ## Project Cloning
-Copied Textor from the old next.js project
+Copied Textor from the old next.js project and fixed the errors
 

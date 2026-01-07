@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTextorContext } from './context'
 import { lib } from '../static/lib'

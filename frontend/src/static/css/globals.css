@@ -1,8 +1,6 @@
 @import url(variables.css);
 
-*,
-*::before,
-*::after {
+* {
 	box-sizing: border-box;
 }
 
@@ -67,7 +65,7 @@ body {
 	.filesInputFlip {
 		flex-wrap: wrap;
 	}
-	
+
 	.appTitleVisibility {
 		display: none;
 	}
@@ -154,7 +152,7 @@ textarea:focus {
 	outline: none;
 	/* Remove the focus border */
 }
- 
+
 
 h1,
 h2,

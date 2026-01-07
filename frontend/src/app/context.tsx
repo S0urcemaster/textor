@@ -1,4 +1,3 @@
-'use client'
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { App as AppModel, Document, Instruction, Settings, Vault } from './model'
 import { defaultState, defaultVault } from '../static/constants'
@@ -80,7 +79,7 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 
 	const documentsBackup = useRef('')
 
-	const [settings, setSettings] = useState<Settings>(defaultState.settings) // let s don t break css from start
+	const [settings, setSettings] = useState<Settings>(defaultState.settings)
 
 	const [editorActions, setEditorActions] = useState<EditorAction[]>([])
 

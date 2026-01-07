@@ -1,4 +1,3 @@
-'use client'
 import Editor from './editor'
 import Head, { menuCommands } from './head'
 import { useTextorContext } from './context'
