@@ -5,5 +5,10 @@
 - Vite
 - Typescript
 - React
+- Codemirror
+- random-words
+- no lint
 
--> Do the project setup in frontend/
+## Project Cloning
+Copied Textor from the old next.js project
+

@@ -1,0 +1,21 @@
+
+// export const settings_default_dark = {
+//    	width: 0,
+//    	material: 'linear-gradient(to right, #5d7c8fff, #6ba2c6ff)',
+//    	materialMedian: '#638da8',
+//    	selectedColor: '#88caff',
+//    	editorBackgroundColor: 'linear-gradient(to top, #1d1a22, #425c76ff)',
+//    	editorFont: 'Funnel Sans',
+//    	editorTextColor: '#deffcbff',
+//    	editorFontSize: 24,
+//    	cloneFontSize: 18,
+//    	brightColor: '#b3d1e3',
+//    	darkColor: '#1d1a22',
+//    	mezzoDarkColor: '#252935',
+//    	lightDarkColor: '#3b4c57ff',
+//    	cloneeditColor: '#88caff',
+//    	inputColor: '#b7e7ff',
+//    	effectEditorBackground: 'linear-gradient(to top, #1d1a22, #425c76ff)',
+//    	effectEditorColor: '#e1b671ff',
+//    	effectEditorSize: 16,
+//    }

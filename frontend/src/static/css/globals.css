@@ -1,0 +1,202 @@
+@import url(variables.css);
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	/* min-height: 100vh; */
+	background-color: var(--body-background);
+	color: #b3d1e3;
+	box-sizing: border-box;
+	line-height: 1.3;
+}
+
+.layout {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 100vh;
+	justify-content: center;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.page {
+	/* display: grid; */
+	/* grid-template-rows: 1fr auto; */
+	/* background-color: var(--mezzo-dark-color); */
+	background-color: transparent;
+	width: var(--page-width);
+	max-width: var(--page-width);
+	box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.filesInputFlip {
+	flex-wrap: unset;
+}
+
+.player {
+	width: 100%;
+	max-width: var(--page-width);
+}
+
+.appTitleVisibility {
+	display: block;
+}
+
+@media (max-width: 798) {
+	.filesInputFlip {
+		flex-wrap: wrap;
+	}
+
+	.page {
+		/* width: 100vw; */
+		width: unset;
+		box-shadow: none;
+	}
+}
+
+@media (max-width: 399px) {
+	.filesInputFlip {
+		flex-wrap: wrap;
+	}
+	
+	.appTitleVisibility {
+		display: none;
+	}
+
+	.page {
+		/* width: 100vw; */
+		width: unset;
+		box-shadow: none;
+	}
+}
+
+textarea {
+	font-family: inherit;
+	font-size: medium;
+	background-color: var(--mezzo-dark-color);
+	color: var(--input-color);
+	border: none;
+	margin: 0;
+}
+
+button {
+	font-family: inherit;
+	letter-spacing: inherit;
+	background: var(--button-background);
+	color: var(--button-color);
+	border: none;
+	font-size: var(--button-font-size);
+	padding: 0;
+	height: 45px;
+	width: 49px;
+	min-width: 49px;
+	margin: 0;
+	border-radius: 2px;
+}
+
+/* .button:hover {
+	padding: 1px 0px 2px 0px;
+	text-shadow: 0px 0px 10px white;
+}
+
+.button:active {
+	padding: 1px 0px 2px 0px;
+	background: var(--button-active-background);
+	text-shadow: none;
+}
+
+.button:disabled {
+	background: none;
+	background-color: #88a290;
+	cursor: progress;
+} */
+
+input,
+select {
+	font-family: inherit;
+	letter-spacing: inherit;
+	font-size: unset;
+	background-color: var(--input-color);
+	color: var(--dark-color);
+	border: none;
+	min-width: unset;
+}
+
+select option {
+	font-family: inherit;
+	letter-spacing: inherit;
+	font-size: medium;
+	background-color: var(--bright-color);
+	color: var(--dark-color);
+}
+
+label {
+	color: var(--dark-color);
+	pointer-events: none;
+}
+
+input:disabled {
+	background-color: var(--bright-color);
+	cursor: progress;
+}
+
+input:focus,
+textarea:focus {
+	outline: none;
+	/* Remove the focus border */
+}
+ 
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+	color: inherit;
+	margin: 0;
+	padding: 0;
+	letter-spacing: inherit;
+	/* Inherit the letter spacing from the parent element */
+}
+
+p {
+	font-size: normal;
+}
+
+a {
+	color: var(--accent-color);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a:hover {
+	color: var(--accent-color);
+	text-decoration: none;
+}
+
+a:visited {
+	color: var(--accent-color);
+}
+
+a:focus {
+	outline: none;
+	/* Remove the focus border */
+}
+
+/* td with orientation top : */
+td {
+	text-align: left;
+	vertical-align: top;
+}
