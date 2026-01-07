@@ -14,7 +14,7 @@ export const instruction_api_vaultimport: Instruction = {
 			return `Error: Invalid id`
 		}
 
-		const baseUrl = import.meta.env.VITE_DEV === 'true'
+		const baseUrl = (import.meta.env.DEV || import.meta.env.VITE_DEV === 'true')
 			? 'http://localhost:4444'
 			: 'https://digi-craft.de/api/vault'
 

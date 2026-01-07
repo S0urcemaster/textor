@@ -16,7 +16,7 @@ const utils = {
 
 		const vault = params.strategy.includes('vault') ? defaultState.vault : params.state.vault
 
-      const isDev = import.meta.env.VITE_DEV === 'true'
+      const isDev = import.meta.env.DEV || import.meta.env.VITE_DEV === 'true'
       if (params.state.version === defaultState.version) {
          if (isDev) {
             state.documents = Array.from(

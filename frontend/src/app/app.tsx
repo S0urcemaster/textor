@@ -50,9 +50,19 @@ export default function () {
 				<InfoPanel />
 			}
 
-			{effects.current?.map((instructions, ix) => (
-				<Effect key={ix} id={ix} name={instructions[0].name} sourceId={Number(instructions[0].args![0])} fullInstructions={instructions} />
-			))}
+			{effects.current?.map((instructions, ix) => {
+				const primary = instructions?.[0]
+				if (!primary) return null
+				return (
+					<Effect
+						key={ix}
+						id={ix}
+						name={primary.name}
+						sourceId={Number(primary.args?.[0])}
+						fullInstructions={instructions}
+					/>
+				)
+			})}
 		</div>
 	)
 }

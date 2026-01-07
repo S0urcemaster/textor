@@ -214,30 +214,30 @@ export const lib = {
 	fromTextInstructions: (text: string): Instruction[] => {
 		log([dlog.tlib], 'fromTextInstructions()', { text: JSON.stringify(text) })
 		if (!text) return []
-		const instructions = text.split('\n')
-		const headItems = instructions[0].split(gs)
+		const lines = text.split('\n')
+		const head = lines[0]?.trim()
+		if (!head) return []
+		const headItems = head.split(gs)
 		const name = headItems[0]
-		let sourceId, fontSize
-		if (headItems.length < 1) return []
-		else if (headItems.length === 2) {
-			sourceId = headItems[1]
+		const headArgs = headItems.slice(1).filter(Boolean)
+		const fallbackInstruction: Instruction = {
+			name: 'name',
+			update: async () => '',
+			manual: false,
 		}
-		else if (headItems.length === 3) {
-			fontSize = headItems[2]
+		const nameInstruction = lib.instructionByName('name') ?? fallbackInstruction
+		const nameEffect: Instruction = {
+			...nameInstruction,
+			name,
+			args: headArgs.length > 0 ? headArgs : undefined,
 		}
-		const nameInstruction = lib.instructionByName(name)
-		if (!nameInstruction) return []
-		const args = []
-		if (sourceId) {
-			args.push(sourceId)
-			if (fontSize) args.push(fontSize)
-		}
-		const nameEffect = { ...nameInstruction, name: name, args: args }
-		const tail = instructions.splice(1).reduce<Instruction[]>((acc, inst) => {
+		const tail = lines.slice(1).reduce<Instruction[]>((acc, inst) => {
+			if (!inst.trim()) return acc
 			const line = inst.split(gs)
 			const instruction = lib.instructionByName(line[0])
 			if (!instruction) return acc
-			acc.push({ ...instruction, name: line[0], args: line.splice(1) })
+			const args = line.slice(1)
+			acc.push({ ...instruction, name: line[0], args: args.length > 0 ? args : undefined })
 			return acc
 		}, [])
 		const result = [nameEffect, ...tail]

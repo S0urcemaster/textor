@@ -129,7 +129,7 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 			defaultState.vault = encrypted
 
 			let updateStrategy: UpdateStrategy[]
-			const isDev = import.meta.env.VITE_DEV === 'true'
+			const isDev = import.meta.env.DEV || import.meta.env.VITE_DEV === 'true'
 			if (isDev) {
 				// updateStrategy = ['settings', 'vault']
 				updateStrategy = ['settings']
@@ -141,7 +141,7 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 
 			setState(utils.applyUpdateStrategy({
 				state: storage.state, strategy: updateStrategy, forceUpdate: false, updateDocuments: [
-					// document_default,
+					document_default,
 					// document_bluesky_x,
 					// document_passmaker,
 					// document_openai,

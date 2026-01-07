@@ -7,9 +7,9 @@ export const instruction_api_vaultexport: Instruction = {
   update: async (text: string, data: string) => {
     if (!data) return `Usage: apivaultexport${gs}data`
 
-    const baseUrl = import.meta.env.VITE_DEV === 'true'
-      ? 'http://localhost:4444'
-      : 'https://digi-craft.de/api/vault'
+    const baseUrl = (import.meta.env.DEV || import.meta.env.VITE_DEV === 'true')
+        ? 'http://localhost:4444'
+        : 'https://digi-craft.de/api/vault'
 
     logBold([dlog.tvault], 'instruction_api_vaultexport/data', { data })
     try {

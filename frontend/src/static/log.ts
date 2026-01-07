@@ -42,7 +42,7 @@ const defaultTagColors: Record<string, string> = {
 	[dlog.tvault]: dlog.corange,
 }
 
-const isDev = import.meta.env.VITE_DEV === 'true'
+const isDev = import.meta.env.DEV || import.meta.env.VITE_DEV === 'true'
 
 export const logConfig: Record<string, boolean> = {
 	[dlog.tapp]: true,
@@ -85,7 +85,7 @@ const getCallerFile = () => {
 	// In Next.js taucht der eigentliche Caller meistens an Position 3 oder 4 auf
 	const caller = stack?.find(line => (line.includes('.tsx') || line.includes('.ts') && !line.includes('log.ts')))
 
-		return extractFilename(caller?.match(/(\/.*\.(?:ts|tsx))/)?.[1] ?? '') || 'unknown'
+	return extractFilename(caller?.match(/(\/.*\.(?:ts|tsx))/)?.[1] ?? '') || 'unknown'
 }
 
 const makeHeader = (tags: string[], title: string, file?: string, customColor?: string) => {
