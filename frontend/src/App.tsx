@@ -15,9 +15,7 @@ function App() {
 		<div className={`layout ${fontClass}`} style={{ ...fontStyle[fontName] }}>
 			<div className="page" style={{ position: "relative" }}>
 				<TextorContextProvider>
-					<div className="app">
-						<TextorApp />
-					</div>
+					<TextorApp />
 				</TextorContextProvider>
 			</div>
 		</div>
