@@ -140,17 +140,17 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 
 			setState(utils.applyUpdateStrategy({
 				state: storage.state, strategy: updateStrategy, forceUpdate: false, updateDocuments: [
-					document_default,
+					// document_default,
 					// document_bluesky_x,
 					// document_passmaker,
 					// document_openai,
 					// effect_caesar_cypher,
 					// document_docs_intro,
-					document_paginator,
+					// document_paginator,
 					// document_settings,
-					document_updates,
+					// document_updates,
 					// document_userchars,
-					document_vault,
+					// document_vault,
 				]
 			}))
 

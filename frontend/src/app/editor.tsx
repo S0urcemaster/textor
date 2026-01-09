@@ -10,6 +10,7 @@ import Panel from '../components/Panel'
 import Button from '../components/buttons/Button'
 import DoubleIconButton from '../components/buttons/DoubleIconButton'
 import PhosphorIcons from '../static/svg/phosphorIcons'
+import Editor from '../components/Editor'
 
 export default function () {
 	const { editor, system } = useTextorContext()
@@ -80,7 +81,7 @@ export default function () {
 					{/* <SwitchButton disabled values={['MD', 'MD']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={markdownOnChanged} /> */}
 					{/* <SwitchButton disabled values={['Text\nile', 'Text\nile']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={() => { }} /> */}
 				</div>
-				<EditorContent />
+				<Editor />
 			</div>
 		</Panel>
 	)

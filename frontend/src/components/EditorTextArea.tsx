@@ -131,7 +131,7 @@ export default function () {
 	)
 	const [overlayScrollbarPad, setOverlayScrollbarPad] = useState(0)
 
-	const editableRef = useRef<HTMLDivElement | null>(null)
+	const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 	const overlayRef = useRef<HTMLDivElement | null>(null)
 
 	const isComposingRef = useRef(false)
@@ -140,7 +140,7 @@ export default function () {
 	const overlayHtml = useMemo(() => renderTokensToHtml(tokens), [tokens])
 
 	const syncScroll = () => {
-		const ta = editableRef.current
+		const ta = textareaRef.current
 		const ov = overlayRef.current
 		if (!ta || !ov) return
 		ov.scrollTop = ta.scrollTop
@@ -148,7 +148,7 @@ export default function () {
 	}
 
 	const updateOverlayScrollbarPad = () => {
-		const ta = editableRef.current
+		const ta = textareaRef.current
 		if (!ta) return
 		const scrollbarWidth = ta.offsetWidth - ta.clientWidth
 		setOverlayScrollbarPad(scrollbarWidth)
@@ -168,51 +168,34 @@ export default function () {
 		updateOverlayScrollbarPad()
 	}, [overlayHtml])
 
-	const onInput = (e: React.FormEvent<HTMLDivElement>) => {
+	const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		// während IME-Komposition: nicht unnötig rumfummeln
-		const value = e.currentTarget.textContent ?? ''
-		setText(value)
+		setText(e.target.value)
 	}
 
-	const insertTextAtCursor = (value: string) => {
-		const selection = window.getSelection()
-		if (!selection || selection.rangeCount === 0) return
-		const range = selection.getRangeAt(0)
-		range.deleteContents()
-		const textNode = document.createTextNode(value)
-		range.insertNode(textNode)
-		range.setStartAfter(textNode)
-		range.setEndAfter(textNode)
-		selection.removeAllRanges()
-		selection.addRange(range)
-	}
-
-	const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+	const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		// Beispiel: Tab als Einrückung
 		if (e.key === 'Tab') {
 			e.preventDefault()
-			insertTextAtCursor('  ')
+			const ta = e.currentTarget
+			const start = ta.selectionStart
+			const end = ta.selectionEnd
+			const next = text.slice(0, start) + '  ' + text.slice(end)
+			setText(next)
+
+			// Cursor nachsetzen (nach dem Render)
 			requestAnimationFrame(() => {
-				const value = editableRef.current?.textContent ?? ''
-				setText(value)
+				const el = textareaRef.current
+				if (!el) return
+				el.selectionStart = el.selectionEnd = start + 2
 			})
 		}
 	}
 
 	const onContainerMouseDown = () => {
 		// Klick aufs Overlay soll den Fokus ins textarea werfen
-		editableRef.current?.focus()
+		textareaRef.current?.focus()
 	}
-
-	useEffect(() => {
-		if (isComposingRef.current) return
-		const el = editableRef.current
-		if (!el) return
-		const current = el.textContent ?? ''
-		if (current !== text) {
-			el.textContent = text
-		}
-	}, [text])
 
 	return (
 		<div
@@ -262,33 +245,28 @@ export default function () {
 					}}
 				/>
 
-				<div
-					ref={editableRef}
+				<textarea
+					ref={textareaRef}
 					style={{
 						position: 'absolute',
 						inset: 0,
 						width: '100%',
 						height: '100%',
 						padding: 14,
-						border: 0,
+						resize: 'none',
+						border: 'none',
 						outline: 'none',
 						background: 'transparent',
 						color: 'transparent',
 						caretColor: colors.editorColor,
 						boxSizing: 'border-box',
-						overflow: 'auto',
-						whiteSpace: 'pre-wrap',
-						wordBreak: 'break-word',
 						fontFamily: editor.fontFamily,
 						fontSize: editor.fontSize,
 						lineHeight: editor.lineHeight,
 						letterSpacing: editor.letterSpacing,
 					}}
-					contentEditable
-					role="textbox"
-					aria-multiline="true"
-					suppressContentEditableWarning
-					onInput={onInput}
+					value={text}
+					onChange={onChange}
 					onScroll={syncScroll}
 					onKeyDown={onKeyDown}
 					onCompositionStart={() => {
@@ -298,6 +276,7 @@ export default function () {
 						isComposingRef.current = false
 					}}
 					spellCheck
+					placeholder="Type here..."
 				/>
 			</div>
 		</div>
