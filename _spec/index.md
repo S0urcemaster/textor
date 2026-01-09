@@ -1,14 +1,73 @@
 # Textor Text Workstation
 
-## Project Setup frontend/
+Dokumentsprache : Deutsch mit Englisch
 
-- Vite
-- Typescript
-- React
-- Codemirror
-- random-words
-- no lint
+Module:
+- frontend/ Textor Web Frontend
+	- Vite
+	- Typescript
+	- React
+	- Codemirror (wird ersetzt)
+	- random-words
+	- kein lint
 
-## Project Cloning
-Copied Textor from the old next.js project and fixed the errors
+## frontend/ Web Frontend
 
+### Application Entry
+
+[frontend/src/main.tsx](frontend/src/main.tsx)
+
+### Main Files
+Textor main file
+	[frontend/src/app/app.tsx](frontend/src/app/app.tsx)
+Application model
+	[frontend/src/app/model.ts](frontend/src/app/model.ts)
+Application main context
+	[frontend/src/app/context.tsx](frontend/src/app/context.tsx)
+Main Editor
+	[frontend/src/app/editor.tsx](frontend/src/app/editor.tsx)
+
+### Features
+
+#### Editor
+- Texteingabe mit dynamischer Formatierung (zB Hashtags)
+- Copy/ Paste
+- Undo/ Redo
+- Verwendung von Emojis und Sonderzeichen
+- Anzeige von Bildern
+
+##### Editor
+- contenteditable Eigenbau
+
+#### Datenverwaltung
+- Daten- und Dokumentverwaltung im Local Storage
+- Backup/ Restore/ Download
+
+#### Effekte
+- Ein Effekt erzeugt eine Ausgabe / meist basierend auf dem Text in Haupteditor
+- Selbst- und vordefinierte Effekte gruppieren Anweisungen / Instructions
+
+#### Instructions
+- Statisch vordefinierte Instructions transformieren dein Eingabetext
+
+#### Vault
+- Der Vault speichert Werte : die im Haupteditor und in Instructions verwendet werden können (wip)
+
+#### Strukturierung des Source Codes
+
+- src/
+	- app/
+		- hooks/ : Custom Hooks
+		- components/ : Reusable Components
+		- panels/ : Editor Panels
+		- static/ : Static definitions
+			- css/ : CSS Files
+			- documents/ : Document definitions
+			- instructions/ : Instruction Definitions
+			- svg/ : SVG Files
+			- themes/ : Theme Definitions
+		- 
+
+
+
+## [text](../frontend/src/components/Editor.tsx)
