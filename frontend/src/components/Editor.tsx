@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useTextorContext } from '../app/context'
+import { dlog, log } from '../static/log'
 
 type EditorProps = {
 	spellCheck?: boolean
@@ -19,10 +20,12 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	useEffect(() => {
-		renderHtml(text)
+		// renderHtml(text)
+		console.log('text', text)
 	}, [text])
 
 	const renderHtml = (source: string) => {
+		console.log('renderHtml', source)
 		const escapeHtml = (value: string) =>
 			value
 				.replace(/&/g, '&amp;')
@@ -64,13 +67,16 @@ export default function ({ spellCheck = true }: EditorProps) {
 			renderHtml(nextText)
 			return nextText
 		})
-		return true
 	}
 
 	const handleInput = () => {
 		if (!editorRef.current) return
 		const nextText = editorRef.current.innerText
-		setText(nextText)
+
+		setText(() => {
+			renderHtml(nextText)
+			return nextText
+		})
 	}
 
 	const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
@@ -80,19 +86,18 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	useEffect(() => {
+		log([dlog.teditor], '[editor.actions]', { actions: editor.actions })
 		if (!editor.actions || editor.actions.length === 0) return
 		editor.actions.forEach(([name, payload]) => {
 			if (name !== 'insert') return
 			const content = payload ?? ''
-			const didInsert = insertTextAtCursor(content)
+			insertTextAtCursor(content)
 			editorRef.current?.focus()
-			if (!didInsert) {
-				setText(prevText => {
-					const nextText = `${prevText}${content}`
-					renderHtml(nextText)
-					return nextText
-				})
-			}
+			setText(prevText => {
+				const nextText = `${prevText}${content}`
+				renderHtml(nextText)
+				return nextText
+			})
 		})
 	}, [editor.actions])
 
