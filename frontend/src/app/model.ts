@@ -72,6 +72,7 @@ export type Settings = {
 	effectEditorFontSize: number
 	width: number
 	userChars: string
+	spellCheck: boolean
 
 }
 

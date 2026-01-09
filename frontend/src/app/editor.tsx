@@ -1,19 +1,20 @@
 // editor.tsx
 
-import { CSSProperties, useEffect, useState } from 'react'
+import { CSSProperties, useEffect } from 'react'
 import { useTextorContext } from './context'
 
 import { FONT_GLUTEN, FONT_NOTO_SANS, FONT_NOTO_SERIF, FONT_ROBOTO_MONO, fonts } from '../static/constants'
-import { EditorContent } from './editorContent'
 import { dlog, log } from '../static/log'
 import Panel from '../components/Panel'
 import Button from '../components/buttons/Button'
 import DoubleIconButton from '../components/buttons/DoubleIconButton'
+import ToggleButton from '../components/buttons/ToggleButton'
 import PhosphorIcons from '../static/svg/phosphorIcons'
 import Editor from '../components/Editor'
 
 export default function () {
 	const { editor, system } = useTextorContext()
+	const spellCheck = system.settings.spellCheck ?? true
 
 	const fontNameReplace: Record<string, string> = {
 		[FONT_NOTO_SANS]: 'Noto Sans',
@@ -77,11 +78,20 @@ export default function () {
 						icons={[<PhosphorIcons.SplitVertical size={20} color={system.settings.colors.buttonColor} />, <PhosphorIcons.ArrowsInLineVertical size={20} color={system.settings.colors.buttonColor} />]} titles={['lne hite', 'lne hite']} />
 					<DoubleIconButton onActivateSecond={letterSpacingDown} onActivate={letterSpacingUp}
 						icons={[<PhosphorIcons.SplitHorizontal size={20} color={system.settings.colors.buttonColor} />, <PhosphorIcons.ArrowsInLineHorizontal size={20} color={system.settings.colors.buttonColor} />]} titles={['let spce', 'let spce']} />
+					<ToggleButton
+						title='spel chk'
+						value={spellCheck}
+						onToggle={(value) => system.updateSettings({ spellCheck: value })}
+						icons={[
+							<PhosphorIcons.EyeClosed color={system.settings.colors.buttonColor} />,
+							<PhosphorIcons.Eye color={system.settings.colors.buttonColor} />
+						]}
+					/>
 					{/* <SwitchButton disabled style={{ fontSize: 30 }} values={['⌗', '⌗']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={hashtagOnChanged} /> */}
 					{/* <SwitchButton disabled values={['MD', 'MD']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={markdownOnChanged} /> */}
 					{/* <SwitchButton disabled values={['Text\nile', 'Text\nile']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={() => { }} /> */}
 				</div>
-				<Editor />
+				<Editor spellCheck={spellCheck} />
 			</div>
 		</Panel>
 	)

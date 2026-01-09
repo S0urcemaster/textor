@@ -15,17 +15,13 @@ Module:
 
 ### Application Entry
 
-[frontend/src/main.tsx](frontend/src/main.tsx)
+[main.tsx](frontend/src/main.tsx)
 
 ### Main Files
-Textor main file
-	[frontend/src/app/app.tsx](frontend/src/app/app.tsx)
-Application model
-	[frontend/src/app/model.ts](frontend/src/app/model.ts)
-Application main context
-	[frontend/src/app/context.tsx](frontend/src/app/context.tsx)
-Main Editor
-	[frontend/src/app/editor.tsx](frontend/src/app/editor.tsx)
+- Textor main file [app.tsx](frontend/src/app/app.tsx)
+- Application model [model.ts](frontend/src/app/model.ts)
+- Application main context [context.tsx](frontend/src/app/context.tsx)
+- Main Editor [editor.tsx](frontend/src/app/editor.tsx)
 
 ### Features
 
@@ -37,7 +33,7 @@ Main Editor
 - Anzeige von Bildern
 
 ##### Editor
-- contenteditable Eigenbau
+ContentEditable Eigenbau [Editor.tsx](../frontend/src/components/Editor.tsx)
 
 #### Datenverwaltung
 - Daten- und Dokumentverwaltung im Local Storage

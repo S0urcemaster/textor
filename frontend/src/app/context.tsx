@@ -16,6 +16,7 @@ import { document_vault } from '../static/documents/system/vault'
 import { document_default } from '../static/documents/default'
 import { document_paginator } from '../static/documents/effects/paginator'
 import { document_vault_export_instruction } from '../static/documents/system/vault'
+import { document_settings } from '../static/documents/system/settings'
 
 export type TextorContext = {
 	files: {
@@ -132,7 +133,6 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 			if (isDev) {
 				// updateStrategy = ['settings', 'vault']
 				updateStrategy = ['settings']
-				// updateStrategy = ['settings']
 			} else {
 				updateStrategy = ['settings', 'vault']
 			}
