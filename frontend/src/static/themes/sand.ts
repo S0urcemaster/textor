@@ -31,6 +31,7 @@ const theme: Settings = {
    effectEditorFontSize: 16,
    width: 800,
    userChars: '',
+   spellCheck: true,
 }
 
 export default theme
