@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTextorContext } from '../app/context'
 import { dlog, log } from '../static/log'
+import utils from '../app/utils'
 
 type EditorProps = {
 	spellCheck?: boolean
@@ -13,6 +14,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 	const editorRef = useRef<HTMLDivElement | null>(null)
 	const [html, setHtml] = useState<string | undefined>()
 	const [text, setText] = useState(editor.text || '')
+	const pendingSelectionRef = useRef<{ start: number, end: number } | null>(null)
 
 	const styles = {
 		p: 'margin-bottom: 5px;',
@@ -20,12 +22,16 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	useEffect(() => {
-		// renderHtml(text)
-		console.log('text', text)
-	}, [text])
+		const next = editor.text ?? ''
+		if (next !== text) {
+			setText(next)
+			updateHtmlFromText(next, false)
+		} else if (html == null) {
+			updateHtmlFromText(next, false)
+		}
+	}, [editor.text])
 
-	const renderHtml = (source: string) => {
-		console.log('renderHtml', source)
+	const buildHtml = (source: string) => {
 		const escapeHtml = (value: string) =>
 			value
 				.replace(/&/g, '&amp;')
@@ -40,12 +46,130 @@ export default function ({ spellCheck = true }: EditorProps) {
 			.map(line => {
 				const escaped = escapeHtml(line)
 				const withTags = escaped.replace(tagRegex, `$1<span style="${styles.hashtag}">$2</span>`)
-				return `<p style="${styles.p}">${withTags}</p>`
+				return `<span style="${styles.p}">${withTags}</span>`
 			})
-			.join('')
-		setHtml(result)
+			.join('<br>')
 		return result
 	}
+
+	const getSelectionOffsets = () => {
+		if (!editorRef.current) return null
+		const selection = window.getSelection()
+		if (!selection || selection.rangeCount === 0) return null
+		const range = selection.getRangeAt(0)
+		if (!editorRef.current.contains(range.commonAncestorContainer)) return null
+		const start = offsetFromPosition(editorRef.current, range.startContainer, range.startOffset)
+		const end = offsetFromPosition(editorRef.current, range.endContainer, range.endOffset)
+		return { start, end }
+	}
+
+	const findPositionInNode = (node: Node, offset: number) => {
+		const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT)
+		let current: Node | null = walker.nextNode()
+		let remaining = offset
+		while (current) {
+			const len = current.textContent?.length ?? 0
+			if (remaining <= len) {
+				return { node: current, offset: remaining }
+			}
+			remaining -= len
+			current = walker.nextNode()
+		}
+		return { node, offset: 0 }
+	}
+
+	const nodeTextLength = (node: Node): number => {
+		if (node.nodeType === Node.TEXT_NODE) {
+			return node.textContent?.length ?? 0
+		}
+		if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
+			return 1
+		}
+		let total = 0
+		for (const child of Array.from(node.childNodes)) {
+			total += nodeTextLength(child)
+		}
+		return total
+	}
+
+	const offsetFromPosition = (root: HTMLElement, node: Node, offset: number) => {
+		let total = 0
+		const walk = (current: Node): boolean => {
+			if (current === node) {
+				if (current.nodeType === Node.TEXT_NODE) {
+					total += offset
+				} else {
+					const children = Array.from(current.childNodes)
+					for (let i = 0; i < Math.min(offset, children.length); i++) {
+						total += nodeTextLength(children[i])
+					}
+				}
+				return true
+			}
+			if (current.nodeType === Node.TEXT_NODE) {
+				total += current.textContent?.length ?? 0
+				return false
+			}
+			if (current.nodeType === Node.ELEMENT_NODE && (current as HTMLElement).tagName === 'BR') {
+				total += 1
+				return false
+			}
+			for (const child of Array.from(current.childNodes)) {
+				if (walk(child)) return true
+			}
+			return false
+		}
+		walk(root)
+		return total
+	}
+
+	const resolveSelectionPoint = (root: HTMLElement, offset: number) => {
+		const nodes = Array.from(root.childNodes)
+		if (nodes.length === 0) {
+			return { node: root, offset: 0 }
+		}
+		let remaining = offset
+		for (const node of nodes) {
+			if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
+				if (remaining <= 1) return { node, offset: 0 }
+				remaining -= 1
+				continue
+			}
+			const len = node.textContent?.length ?? 0
+			if (remaining <= len) {
+				return findPositionInNode(node, remaining)
+			}
+			remaining -= len
+		}
+		const last = nodes[nodes.length - 1]
+		return { node: last, offset: last.childNodes.length }
+	}
+
+	const restoreSelectionOffsets = (offsets: { start: number, end: number }) => {
+		if (!editorRef.current) return
+		const selection = window.getSelection()
+		if (!selection) return
+		const anchor = resolveSelectionPoint(editorRef.current, offsets.start)
+		const head = resolveSelectionPoint(editorRef.current, offsets.end)
+		const range = document.createRange()
+		range.setStart(anchor.node, anchor.offset)
+		range.setEnd(head.node, head.offset)
+		selection.removeAllRanges()
+		selection.addRange(range)
+	}
+
+	const updateHtmlFromText = (source: string, preserveSelection = true) => {
+		if (preserveSelection) {
+			pendingSelectionRef.current = getSelectionOffsets()
+		}
+		setHtml(buildHtml(source))
+	}
+
+	useLayoutEffect(() => {
+		if (!pendingSelectionRef.current) return
+		restoreSelectionOffsets(pendingSelectionRef.current)
+		pendingSelectionRef.current = null
+	}, [html])
 
 	const insertTextAtCursor = (insertText: string) => {
 		if (!editorRef.current) return false
@@ -53,30 +177,73 @@ export default function ({ spellCheck = true }: EditorProps) {
 		if (!selection || selection.rangeCount === 0) return false
 		const range = selection.getRangeAt(0)
 		if (!editorRef.current.contains(range.commonAncestorContainer)) return false
-
-		const preRange = range.cloneRange()
-		preRange.selectNodeContents(editorRef.current)
-		preRange.setEnd(range.startContainer, range.startOffset)
-		const start = preRange.toString().length
-
-		preRange.setEnd(range.endContainer, range.endOffset)
-		const end = preRange.toString().length
+		const offsets = getSelectionOffsets()
+		if (!offsets) return false
+		const { start, end } = offsets
 
 		setText(prevText => {
 			const nextText = `${prevText.slice(0, start)}${insertText}${prevText.slice(end)}`
-			renderHtml(nextText)
+			pendingSelectionRef.current = {
+				start: start + insertText.length,
+				end: start + insertText.length
+			}
+			setHtml(buildHtml(nextText))
+			editor.setText(nextText)
 			return nextText
 		})
 	}
 
+	const getPlainText = (root: HTMLElement) => {
+		let out = ''
+		const walk = (node: Node) => {
+			if (node.nodeType === Node.TEXT_NODE) {
+				out += node.textContent ?? ''
+				return
+			}
+			if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
+				out += '\n'
+				return
+			}
+			for (const child of Array.from(node.childNodes)) {
+				walk(child)
+			}
+		}
+		walk(root)
+		return out
+	}
+
+	const getCurrentText = () => {
+		if (editorRef.current) {
+			return getPlainText(editorRef.current).replace(/\r\n/g, '\n')
+		}
+		return text
+	}
+
 	const handleInput = () => {
 		if (!editorRef.current) return
-		const nextText = editorRef.current.innerText
+		const nextText = getPlainText(editorRef.current).replace(/\r\n/g, '\n')
 
 		setText(() => {
-			renderHtml(nextText)
+			updateHtmlFromText(nextText)
+			editor.setText(nextText)
 			return nextText
 		})
+	}
+
+	const handleBeforeInput = (event: React.FormEvent<HTMLDivElement>) => {
+		const inputEvent = event.nativeEvent as InputEvent
+		if (inputEvent.inputType === 'insertText' && inputEvent.data === '.') {
+			console.log(event)
+			inputEvent.preventDefault()
+			insertTextAtCursor('·')
+		}
+	}
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === '.' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+			event.preventDefault()
+			insertTextAtCursor('·')
+		}
 	}
 
 	const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
@@ -89,15 +256,26 @@ export default function ({ spellCheck = true }: EditorProps) {
 		log([dlog.teditor], '[editor.actions]', { actions: editor.actions })
 		if (!editor.actions || editor.actions.length === 0) return
 		editor.actions.forEach(([name, payload]) => {
-			if (name !== 'insert') return
-			const content = payload ?? ''
-			insertTextAtCursor(content)
-			editorRef.current?.focus()
-			setText(prevText => {
-				const nextText = `${prevText}${content}`
-				renderHtml(nextText)
-				return nextText
-			})
+			switch (name) {
+				case 'insert': {
+					const content = payload ?? ''
+					insertTextAtCursor(content)
+					editorRef.current?.focus()
+					break
+				}
+				case 'clear': {
+					setText('')
+					updateHtmlFromText('', false)
+					editor.setText('')
+					editorRef.current?.focus()
+					break
+				}
+				case 'copy': {
+					const current = getCurrentText()
+					utils.copyToClipboard(current)
+					break
+				}
+			}
 		})
 	}, [editor.actions])
 
@@ -107,6 +285,8 @@ export default function ({ spellCheck = true }: EditorProps) {
 			contentEditable
 			spellCheck={spellCheck}
 			suppressContentEditableWarning
+			onBeforeInput={handleBeforeInput}
+			onKeyDown={handleKeyDown}
 			onInput={handleInput}
 			onPaste={handlePaste}
 			dangerouslySetInnerHTML={{ __html: html || '' }}
@@ -120,6 +300,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 				lineHeight: editor.lineHeight,
 				letterSpacing: editor.letterSpacing + 'px',
 				fontFamily: editor.fontFamily,
+				whiteSpace: 'pre-wrap',
 				overflowY: 'scroll',
 				outline: 'none',
 			}}

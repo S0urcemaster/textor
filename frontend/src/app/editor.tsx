@@ -93,7 +93,8 @@ export default function () {
 					{/* <SwitchButton disabled values={['Text\nile', 'Text\nile']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={() => { }} /> */}
 				</div>
 				{/* <Editor spellCheck={spellCheck} /> */}
-				<EditorContent />
+				{/* <EditorContent /> */}
+				<Editor spellCheck={spellCheck} />
 			</div>
 		</Panel>
 	)

@@ -115,7 +115,6 @@ export default function ({ id, name, sourceId, fullInstructions }: { id: number,
 		const doc = files.currentDocument
 		if (!doc) return
 		lib.updateEach(doc.editor!.text, currentInstructions.current).then(result => {
-			console.log(result)
 			const currentFolder = doc.folderName
 			const currentFile = doc.name
 
