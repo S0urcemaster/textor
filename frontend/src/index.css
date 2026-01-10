@@ -1,6 +1,6 @@
 @import "@fontsource/noto-sans/400.css";
 @import "@fontsource/noto-serif/400.css";
-@import "@fontsource/roboto-mono/400.css";
+@import "./roboto-mono.css";
 @import "@fontsource/gluten/400.css";
 
 * {
