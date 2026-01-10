@@ -20,6 +20,18 @@ export default function ({ spellCheck = true }: EditorProps) {
 		p: 'margin-bottom: 5px;',
 		hashtag: `color: ${system.settings.colors.blueAccent}; font-weight: bold;`,
 	}
+	const stripZeroWidth = (value: string) => value.replace(/\u200B/g, '')
+	const textLength = (value?: string | null) => stripZeroWidth(value ?? '').length
+	const domOffsetFromLogical = (value: string, logicalOffset: number) => {
+		if (logicalOffset <= 0) return 0
+		let count = 0
+		for (let i = 0; i < value.length; i++) {
+			if (value[i] === '\u200B') continue
+			count += 1
+			if (count === logicalOffset) return i + 1
+		}
+		return value.length
+	}
 
 	useEffect(() => {
 		const next = editor.text ?? ''
@@ -69,9 +81,10 @@ export default function ({ spellCheck = true }: EditorProps) {
 		let current: Node | null = walker.nextNode()
 		let remaining = offset
 		while (current) {
-			const len = current.textContent?.length ?? 0
+			const text = current.textContent ?? ''
+			const len = textLength(text)
 			if (remaining <= len) {
-				return { node: current, offset: remaining }
+				return { node: current, offset: domOffsetFromLogical(text, remaining) }
 			}
 			remaining -= len
 			current = walker.nextNode()
@@ -81,7 +94,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 
 	const nodeTextLength = (node: Node): number => {
 		if (node.nodeType === Node.TEXT_NODE) {
-			return node.textContent?.length ?? 0
+			return textLength(node.textContent)
 		}
 		if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
 			return 1
@@ -98,7 +111,8 @@ export default function ({ spellCheck = true }: EditorProps) {
 		const walk = (current: Node): boolean => {
 			if (current === node) {
 				if (current.nodeType === Node.TEXT_NODE) {
-					total += offset
+					const text = current.textContent ?? ''
+					total += textLength(text.slice(0, offset))
 				} else {
 					const children = Array.from(current.childNodes)
 					for (let i = 0; i < Math.min(offset, children.length); i++) {
@@ -108,7 +122,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 				return true
 			}
 			if (current.nodeType === Node.TEXT_NODE) {
-				total += current.textContent?.length ?? 0
+				total += textLength(current.textContent)
 				return false
 			}
 			if (current.nodeType === Node.ELEMENT_NODE && (current as HTMLElement).tagName === 'BR') {
@@ -143,7 +157,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 				remaining -= 1
 				continue
 			}
-			const len = node.textContent?.length ?? 0
+			const len = textLength(node.textContent)
 			if (remaining <= len) {
 				return findPositionInNode(node, remaining)
 			}
@@ -254,6 +268,56 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Backspace') {
+			const offsets = getSelectionOffsets()
+			if (offsets && offsets.start === offsets.end && offsets.start > 0) {
+				const current = getCurrentText()
+				if (current[offsets.start - 1] === '\n') {
+					event.preventDefault()
+					const nextText = `${current.slice(0, offsets.start - 1)}${current.slice(offsets.end)}`
+					pendingSelectionRef.current = {
+						start: offsets.start - 1,
+						end: offsets.start - 1,
+					}
+					setText(nextText)
+					setHtml(buildHtml(nextText))
+					editor.setText(nextText)
+					return
+				}
+			}
+		}
+		if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+			const selection = window.getSelection()
+			if (selection?.isCollapsed && selection.anchorNode?.nodeType === Node.TEXT_NODE) {
+				const anchorText = selection.anchorNode.textContent ?? ''
+				if (anchorText === '\u200B' && selection.anchorNode.parentNode) {
+					const parent = selection.anchorNode.parentNode
+					const sibling = event.key === 'ArrowRight' ? parent.nextSibling : parent.previousSibling
+					if (sibling?.nodeType === Node.ELEMENT_NODE && (sibling as HTMLElement).tagName === 'BR') {
+						const target = event.key === 'ArrowRight' ? sibling.nextSibling : sibling.previousSibling
+						if (target && editorRef.current) {
+							event.preventDefault()
+							const nextPos = findPositionInNode(target, event.key === 'ArrowRight' ? 0 : nodeTextLength(target))
+							const range = document.createRange()
+							range.setStart(nextPos.node, nextPos.offset)
+							range.collapse(true)
+							selection.removeAllRanges()
+							selection.addRange(range)
+							return
+						}
+						if (editorRef.current) {
+							event.preventDefault()
+							const range = document.createRange()
+							range.setStart(editorRef.current, event.key === 'ArrowRight' ? editorRef.current.childNodes.length : 0)
+							range.collapse(true)
+							selection.removeAllRanges()
+							selection.addRange(range)
+							return
+						}
+					}
+				}
+			}
+		}
 		if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey && !event.altKey) {
 			event.preventDefault()
 			insertTextAtCursor('\n')
