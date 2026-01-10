@@ -11,16 +11,18 @@ export function InfoPanel() {
 	return (
 		<Panel style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '1', color: system.settings.colors.accent }}>
 
-			<div style={{ display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'start' }}>
-				<ToggleButton
-					title="layout"
-					value={system.settings.horizontalLayout}
-					onToggle={() => system.updateSettings({ horizontalLayout: !system.settings.horizontalLayout })}
-					icons={[
-						<phosphorIcons.SplitVertical color={system.settings.colors.buttonColor} />,
-						<phosphorIcons.SplitHorizontal color={system.settings.colors.buttonColor} />
-					]}
-				/>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: 1, justifyContent: 'flex-start', alignItems: 'start' }}>
+				<div>
+					<ToggleButton
+						title="layout"
+						value={system.settings.horizontalLayout}
+						onToggle={() => system.updateSettings({ horizontalLayout: !system.settings.horizontalLayout })}
+						icons={[
+							<phosphorIcons.SplitVertical color={system.settings.colors.buttonColor} />,
+							<phosphorIcons.SplitHorizontal color={system.settings.colors.buttonColor} />
+						]}
+					/>
+				</div>
 				<SafetyButton
 					onActivate={files.resetStorage}
 					icons={[

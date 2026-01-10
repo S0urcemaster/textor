@@ -283,7 +283,11 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 	}
 
 	function updateSettings(setting: any) {
-		setSettings({ ...settings, ...setting })
+		const nextSettings = { ...settings, ...setting }
+		if (state) {
+			state.settings = nextSettings
+		}
+		setSettings(nextSettings)
 	}
 
 	function getVault() {
