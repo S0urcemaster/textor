@@ -129,9 +129,12 @@ export default function ({ spellCheck = true }: EditorProps) {
 			return { node: root, offset: 0 }
 		}
 		let remaining = offset
-		for (const node of nodes) {
+		for (let i = 0; i < nodes.length; i++) {
+			const node = nodes[i]
 			if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
-				if (remaining <= 1) return { node, offset: 0 }
+				if (remaining <= 1) {
+					return { node: root, offset: i + 1 }
+				}
 				remaining -= 1
 				continue
 			}
@@ -232,6 +235,11 @@ export default function ({ spellCheck = true }: EditorProps) {
 
 	const handleBeforeInput = (event: React.FormEvent<HTMLDivElement>) => {
 		const inputEvent = event.nativeEvent as InputEvent
+		if (inputEvent.inputType === 'insertParagraph' || inputEvent.inputType === 'insertLineBreak') {
+			inputEvent.preventDefault()
+			insertTextAtCursor('\n')
+			return
+		}
 		if (inputEvent.inputType === 'insertText' && inputEvent.data === '.') {
 			console.log(event)
 			inputEvent.preventDefault()
@@ -240,6 +248,11 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+			event.preventDefault()
+			insertTextAtCursor('\n')
+			return
+		}
 		if (event.key === '.' && !event.ctrlKey && !event.metaKey && !event.altKey) {
 			event.preventDefault()
 			insertTextAtCursor('·')
