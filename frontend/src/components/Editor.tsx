@@ -46,7 +46,8 @@ export default function ({ spellCheck = true }: EditorProps) {
 			.map(line => {
 				const escaped = escapeHtml(line)
 				const withTags = escaped.replace(tagRegex, `$1<span style="${styles.hashtag}">$2</span>`)
-				return `<span style="${styles.p}">${withTags}</span>`
+				const content = withTags === '' ? '&#8203;' : withTags
+				return `<span style="${styles.p}">${content}</span>`
 			})
 			.join('<br>')
 		return result
@@ -133,7 +134,11 @@ export default function ({ spellCheck = true }: EditorProps) {
 			const node = nodes[i]
 			if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
 				if (remaining <= 1) {
-					return { node: root, offset: i + 1 }
+					const nextNode = nodes[i + 1]
+					if (nextNode) {
+						return findPositionInNode(nextNode, 0)
+					}
+					return { node: root, offset: nodes.length }
 				}
 				remaining -= 1
 				continue
@@ -200,7 +205,8 @@ export default function ({ spellCheck = true }: EditorProps) {
 		let out = ''
 		const walk = (node: Node) => {
 			if (node.nodeType === Node.TEXT_NODE) {
-				out += node.textContent ?? ''
+				const value = node.textContent ?? ''
+				out += value.replace(/\u200B/g, '')
 				return
 			}
 			if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {

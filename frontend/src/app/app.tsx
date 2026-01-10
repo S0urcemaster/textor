@@ -42,7 +42,7 @@ export default function () {
 	}
 
 	return (
-		<div className="page" style={{ display: 'flex', flexDirection: system.settings.horizontalLayout ? 'row' : 'column', width: system.settings.width }}>
+		<div className="page" style={{ background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`, display: 'flex', flexDirection: system.settings.horizontalLayout ? 'row' : 'column', width: system.settings.width }}>
 
 			<div style={{ flex: 1 }}>
 				<Editor />
