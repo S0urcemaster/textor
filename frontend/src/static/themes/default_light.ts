@@ -31,7 +31,8 @@ export const settings_default_light: Settings = {
 
 	},
 	effectEditorFontSize: 16,
-	width: 800,
+	width: 802,
+	horizontalLayout: false,
 	userChars: '',
 	spellCheck: true,
 }

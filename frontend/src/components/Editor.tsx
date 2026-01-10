@@ -291,7 +291,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 			onPaste={handlePaste}
 			dangerouslySetInnerHTML={{ __html: html || '' }}
 			style={{
-				height: 300, width: '100%',
+				height: system.settings.horizontalLayout ? document.body.getBoundingClientRect().height - 75 : '300px', width: '100%',
 				padding: '5px 6px 0px 11px',
 				caretColor: '#000000',
 				background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLo}, ${system.settings.colors.editorBackgroundHi})`,

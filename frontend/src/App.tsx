@@ -13,7 +13,7 @@ function App() {
 
 	return (
 		<div className={`layout ${fontClass}`} style={{ ...fontStyle[fontName] }}>
-			<div className="page" style={{ position: "relative" }}>
+			<div style={{ position: "relative" }}>
 				<TextorContextProvider>
 					<TextorApp />
 				</TextorContextProvider>

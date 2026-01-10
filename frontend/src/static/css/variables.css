@@ -9,13 +9,12 @@
 	--accent-color: #bbe5ffff;
 	--editor-font-size: 20;
 	--editor-color: #d6efffff;
-   --effect-editor-background: linear-gradient(to top, #6e7678ff, #647171ff);
+	--effect-editor-background: linear-gradient(to top, #6e7678ff, #647171ff);
 	--input-color: #d4d8d1ff;
 	--material: linear-gradient(to right, rgb(160, 143, 105), rgb(204, 192, 138));
 	--mezzo-dark-color: #696e7eff;
 	--editor-backround: linear-gradient(to right, #8f7a5dff, #c6ac6bff);
 	--material-median: #638da8;
-	--page-width: 802px;
 	--red-color: #a43434ff;
 	--blue-color: #3457a4ff;
 	--yellow-color: #a48a34ff;
