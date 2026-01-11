@@ -20,7 +20,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 	const pendingSelectionRef = useRef<SelectionOffsets | null>(null)
 
 	const styles = {
-		p: 'margin-bottom: 5px;',
+		paragraph: 'margin-bottom: 5px;',
 		hashtag: `color: ${system.settings.colors.blueAccent}; font-weight: bold;`,
 	}
 
