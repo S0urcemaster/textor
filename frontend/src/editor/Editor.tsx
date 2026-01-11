@@ -21,6 +21,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 
 	const styles: EditorHtmlStyles = {
 		paragraph: 'margin-bottom: 10px; display: inline-block; width: 100%; padding-left: 13px; text-indent: -13px;',
+		paragraphSoft: 'display: inline-block; width: 100%; padding-left: 13px; text-indent: -13px;',
 		hashtag: `color: ${system.settings.colors.blueAccent}; font-weight: bold; text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;`,
 		attag: `color: ${system.settings.colors.blueAccent}; font-weight: bold; text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;`,
 	}
@@ -91,9 +92,14 @@ export default function ({ spellCheck = true }: EditorProps) {
 
 	const handleBeforeInput = (event: React.FormEvent<HTMLDivElement>) => {
 		const inputEvent = event.nativeEvent as InputEvent
-		if (inputEvent.inputType === 'insertParagraph' || inputEvent.inputType === 'insertLineBreak') {
+		if (inputEvent.inputType === 'insertParagraph') {
 			inputEvent.preventDefault()
 			insertTextAtCursor('\n')
+			return
+		}
+		if (inputEvent.inputType === 'insertLineBreak') {
+			inputEvent.preventDefault()
+			insertTextAtCursor('\v')
 			return
 		}
 		if (inputEvent.inputType === 'insertText' && inputEvent.data === '.') {
@@ -108,7 +114,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 			const offsets = editorRef.current ? getSelectionOffsets(editorRef.current) : null
 			if (offsets && offsets.start === offsets.end && offsets.start > 0) {
 				const current = getCurrentText()
-				if (current[offsets.start - 1] === '\n') {
+				if (current[offsets.start - 1] === '\n' || current[offsets.start - 1] === '\v') {
 					event.preventDefault()
 					const nextText = `${current.slice(0, offsets.start - 1)}${current.slice(offsets.end)}`
 					pendingSelectionRef.current = {
@@ -154,9 +160,14 @@ export default function ({ spellCheck = true }: EditorProps) {
 				}
 			}
 		}
-		if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+		if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey) {
 			event.preventDefault()
 			insertTextAtCursor('\n')
+			return
+		}
+		if (event.key === 'Enter' && event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
+			event.preventDefault()
+			insertTextAtCursor('\v')
 			return
 		}
 		if (event.key === '.' && !event.ctrlKey && !event.metaKey && !event.altKey) {

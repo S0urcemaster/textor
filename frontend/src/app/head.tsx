@@ -28,7 +28,8 @@ export default function ({ menuClicked }: { menuClicked: (ix: string) => void })
 
 	function copyClicked() {
 		if (!files.currentDocument) return
-		utils.copyToClipboard(files.currentDocument.editor!.text)
+		const text = files.currentDocument.editor!.text.replaceAll('\v', '\n')
+		utils.copyToClipboard(text)
 	}
 
 	return (

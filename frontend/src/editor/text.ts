@@ -11,7 +11,8 @@ export const getPlainText = (root: HTMLElement) => {
 			return
 		}
 		if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).tagName === 'BR') {
-			out += '\n'
+			const element = node as HTMLElement
+			out += element.hasAttribute('data-soft') ? '\v' : '\n'
 			return
 		}
 		for (const child of Array.from(node.childNodes)) {
