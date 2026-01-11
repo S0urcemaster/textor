@@ -44,9 +44,12 @@ export type Settings = {
 		buttonBackgroundLo: string
 		buttonBackgroundHi: string
 		buttonColor: string
-		editorBackgroundHi: string
-		editorBackgroundLo: string
-		editorColor: string
+		editorBackgroundHiLight: string
+		editorBackgroundHiDark: string
+		editorBackgroundLoLight: string
+		editorBackgroundLoDark: string
+		editorColorLight: string
+		editorColorDark: string
 		effectEditorColor: string
 		inputBackground: string
 		materialMedian: string

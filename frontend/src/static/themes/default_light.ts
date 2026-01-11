@@ -5,13 +5,16 @@ export const settings_default_light: Settings = {
 		buttonBackgroundLo: '#e1dcbaff',
 		buttonBackgroundHi: '#eef1d3ff',
 		buttonColor: '#3d4a53',
-		editorBackgroundHi: '#55697eff',
-		editorBackgroundLo: '#3d4a53ff',
-		editorColor: '#d4f2ffff',
+		editorBackgroundHiLight: 'rgba(249, 239, 219, 1)',
+		editorBackgroundHiDark: '#55697eff',
+		editorBackgroundLoLight: 'rgba(229, 219, 170, 1)',
+		editorBackgroundLoDark: '#3d4a53ff',
+		editorColorLight: '#3d4a53ff',
+		editorColorDark: '#d4f2ffff',
 		effectEditorColor: '#e1dcbaff',
 		inputBackground: '#d4d8d1ff',
 		selectedColor: '#d6efffff',
-		pageBackground: '#144e32',
+		pageBackground: '#144e32', // obsolete ?
 
 		bright: '#b3d1e3',
 		accent: '#d6efffff',
@@ -33,5 +36,5 @@ export const settings_default_light: Settings = {
 	horizontalLayout: false,
 	userChars: '',
 	spellCheck: true,
-	contrast: false,
+	contrast: true,
 }

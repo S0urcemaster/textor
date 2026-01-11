@@ -88,12 +88,12 @@ export default function () {
 						]}
 					/>
 					<ToggleButton
-						title='contrast'
+						title='contrst'
 						value={system.settings.contrast}
 						onToggle={(value) => system.updateSettings({ contrast: value })}
 						icons={[
-							<PhosphorIcons.Moon color={system.settings.colors.buttonColor} />,
-							<PhosphorIcons.Sun color={system.settings.colors.buttonColor} />
+							<PhosphorIcons.Sun color={system.settings.colors.buttonColor} />,
+							<PhosphorIcons.Moon color={system.settings.colors.buttonColor} />
 						]}
 					/>
 

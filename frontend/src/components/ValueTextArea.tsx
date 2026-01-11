@@ -21,7 +21,7 @@ export default ({ value, onChange }: { value: string, onChange: (value: string) 
             width: '100%',
             resize: 'none',
             paddingLeft: 10,
-            background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLo}, ${system.settings.colors.editorBackgroundHi})`,
+            background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
             color: system.settings.colors.effectEditorColor,
          }}
       />

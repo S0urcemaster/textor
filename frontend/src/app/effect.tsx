@@ -187,7 +187,7 @@ Your former User content : \n${system.documentsBackup}`)
 								placeholder={'Select Effect'}
 								className={fonts[FONT_ROBOTO_MONO].className}
 								style={{
-									background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLo}, ${system.settings.colors.editorBackgroundHi})`,
+									background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
 									borderBottom: `1px solid ${system.settings.colors.lightDark}`,
 									borderTop: `1px solid ${system.settings.colors.effectEditorColor}`,
 									resize: 'none',
@@ -237,7 +237,7 @@ Your former User content : \n${system.documentsBackup}`)
 					}
 				</div>
 
-				<div style={{ display: 'flex', position: 'relative', paddingRight: 3, background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLo}, ${system.settings.colors.editorBackgroundHi})` }}>
+				<div style={{ display: 'flex', position: 'relative', paddingRight: 3, background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoDark}, ${system.settings.colors.editorBackgroundHiDark})` }}>
 
 					<textarea onClick={() => effects.setSelectedId(id)}
 						value={effectText}
@@ -248,7 +248,7 @@ Your former User content : \n${system.documentsBackup}`)
 							height: '100%',
 							width: '100%',
 							resize: 'none',
-							// background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLo}, ${system.settings.colors.editorBackgroundHi})`,
+							// background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
 							background: 'inherit',
 							color: system.settings.colors.effectEditorColor,
 							padding: '2px 12px 0px 6px',
@@ -259,7 +259,7 @@ Your former User content : \n${system.documentsBackup}`)
 					<div style={{
 						inset: 0,
 						position: 'absolute',
-						background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLo}, ${system.settings.colors.editorBackgroundHi})`,
+						background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
 						opacity: opacity,
 						transition: `opacity ${updateTransitionMs}ms ease-in-out`,
 						pointerEvents: 'none'

@@ -5,9 +5,12 @@ const theme: Settings = {
 		buttonBackgroundLo: '#e1dcbaff',
 		buttonBackgroundHi: '#eef1d3ff',
 		buttonColor: '#3d4a53',
-		editorBackgroundHi: '#55697eff',
-		editorBackgroundLo: '#3d4a53ff',
-		editorColor: 'rgba(225, 220, 186, 1)',
+		editorBackgroundHiLight: 'rgba(225, 220, 186, 1)',
+		editorBackgroundHiDark: '#55697eff',
+		editorBackgroundLoLight: 'rgba(225, 220, 186, 1)',
+		editorBackgroundLoDark: '#3d4a53ff',
+		editorColorLight: '#3d4a53ff',
+		editorColorDark: 'rgba(225, 220, 186, 1)',
 		effectEditorColor: '#f4d39eff',
 		inputBackground: '#d4d8d1ff',
 		selectedColor: '#d6efffff',
@@ -33,6 +36,7 @@ const theme: Settings = {
 	horizontalLayout: false,
 	userChars: '',
 	spellCheck: true,
+	contrast: false,
 }
 
 export default theme

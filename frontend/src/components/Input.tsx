@@ -45,8 +45,8 @@ export default ({ value, submit, style, placeholder, autoSubmit = false, ...prop
             if (props.onChange) props.onChange(e)
          }}
          style={{
-            height: 49, background: `linear-gradient(to top, ${lib.averageHexColor(system.settings.colors.editorBackgroundLo, '#646464ff')}, 
-            ${system.settings.colors.editorBackgroundHi})`, color: system.settings.colors.editorColor, padding: '0px 5px 0px 10px', fontSize: 'larger',
+            height: 49, background: `linear-gradient(to top, ${lib.averageHexColor(system.settings.colors.editorBackgroundLoLight, '#646464ff')}, 
+            ${system.settings.colors.editorBackgroundHiLight})`, color: system.settings.colors.editorColorLight, padding: '0px 5px 0px 10px', fontSize: 'larger',
             ...style
          }}
          onKeyDown={e => {
