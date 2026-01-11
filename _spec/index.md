@@ -9,6 +9,7 @@ Module:
 	- React
 	- Codemirror (wird ersetzt)
 	- random-words
+	- @playwright/test
 	- kein lint
 
 ## frontend/ Web Frontend
@@ -26,14 +27,14 @@ Module:
 ### Features
 
 #### Editor
+
+ContentEditable Eigenbau [editor/](../frontend/src/editor/Editor.tsx)
+
 - Texteingabe mit dynamischer Formatierung (zB Hashtags)
 - Copy/ Paste
 - Undo/ Redo
 - Verwendung von Emojis und Sonderzeichen
 - Anzeige von Bildern
-
-##### Editor
-ContentEditable Eigenbau [Editor.tsx](../frontend/src/components/Editor.tsx)
 
 #### Datenverwaltung
 - Daten- und Dokumentverwaltung im Local Storage

@@ -11,7 +11,6 @@ import DoubleIconButton from '../components/buttons/DoubleIconButton'
 import ToggleButton from '../components/buttons/ToggleButton'
 import PhosphorIcons from '../static/svg/phosphorIcons'
 import Editor from '../editor/Editor'
-import { EditorContent } from './editorContent'
 
 export default function () {
 	const { editor, system } = useTextorContext()
