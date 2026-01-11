@@ -20,27 +20,21 @@ const softBreakStorageToken = '/n'
 const encodeSoftBreaks = (value: string) => value.replaceAll(softBreakToken, softBreakStorageToken)
 const decodeSoftBreaks = (value: string) => value.replaceAll(softBreakStorageToken, softBreakToken)
 
-const mapDocumentText = (state: AppModel | undefined, mapText: (value: string) => string): AppModel | undefined => {
-	if (!state) return state
-	return {
-		...state,
-		documents: state.documents.map(doc => ({
-			...doc,
-			editor: doc.editor ? { ...doc.editor, text: mapText(doc.editor.text ?? '') } : doc.editor,
-		})),
-	}
-}
+const mapDocumentText = (state: AppModel, mapText: (value: string) => string): AppModel => ({
+	...state,
+	documents: state.documents.map(doc => ({
+		...doc,
+		editor: doc.editor ? { ...doc.editor, text: mapText(doc.editor.text ?? '') } : doc.editor,
+	})),
+})
 
 export async function loadStorage(): Promise<StorageState> {
 	let storage = JSON.parse(localStorage.getItem('textor')!) as StorageState
 	if (!storage || !storage.state) {
-		storage = JSON.parse(localStorage.getItem('textor')!)
-	}
-	if (storage?.state) {
-		storage = { ...storage, state: mapDocumentText(storage.state, decodeSoftBreaks) }
+		return { state: defaultState }
 	}
 	log([dlog.tlocalstorage], '📤 loadStorage()', { storage })
-	return storage
+	return { ...storage, state: mapDocumentText(storage.state, decodeSoftBreaks) }
 }
 
 export function saveStorage(storage: StorageState) {
