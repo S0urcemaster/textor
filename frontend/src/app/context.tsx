@@ -208,14 +208,18 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 				const eff = currentEffects.map(effect => lib.toTextInstructions(effect))
 				currentDocument.effects = eff
 			}
-			saveStorage({ state: state! })
+			if (state) {
+				saveStorage({ state })
+			}
 		}
 	}, [currentEffects])
 
 	useEffect(() => {
 		log([dlog.tcontext], '🔻 [settings]', { settings })
 		if (settings && settings !== defaultState.settings) {
-			saveStorage({ state: state! })
+			if (state) {
+				saveStorage({ state })
+			}
 		}
 	}, [settings])
 
@@ -302,7 +306,9 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 		}
 		state!.documents.splice(state!.documents.indexOf(cdoc), 1, currentDocument!)
 		log([dlog.tcontext], 'save()', state)
-		saveStorage({ state: state! })
+		if (state) {
+			saveStorage({ state })
+		}
 	}
 
 	function saveVault(params: { newVault: Vault }) {
