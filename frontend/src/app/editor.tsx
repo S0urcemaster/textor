@@ -10,7 +10,7 @@ import Button from '../components/buttons/Button'
 import DoubleIconButton from '../components/buttons/DoubleIconButton'
 import ToggleButton from '../components/buttons/ToggleButton'
 import PhosphorIcons from '../static/svg/phosphorIcons'
-import Editor from '../components/Editor'
+import Editor from '../editor/Editor'
 import { EditorContent } from './editorContent'
 
 export default function () {
