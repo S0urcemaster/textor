@@ -29,7 +29,7 @@ function tokenize(input: string): Token[] {
 		tokens.push({ kind: 'text', value })
 	}
 
-	const isHashtagChar = (ch: string) => /[A-Za-z0-9_]/.test(ch)
+	const isHashtagChar = (ch: string) => /[A-Za-z0-9_äöüÄÖÜ]/.test(ch)
 
 	while (i < input.length) {
 		// Bold: **text**

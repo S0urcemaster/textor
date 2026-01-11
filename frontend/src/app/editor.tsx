@@ -87,12 +87,17 @@ export default function () {
 							<PhosphorIcons.Eye color={system.settings.colors.buttonColor} />
 						]}
 					/>
-					{/* <SwitchButton disabled style={{ fontSize: 30 }} values={['⌗', '⌗']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={hashtagOnChanged} /> */}
-					{/* <SwitchButton disabled values={['MD', 'MD']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={markdownOnChanged} /> */}
-					{/* <SwitchButton disabled values={['Text\nile', 'Text\nile']} value={0} colors={[settings.buttonColor,system.settings.blueColor]} timeout={500} callback={() => { }} /> */}
+					<ToggleButton
+						title='contrast'
+						value={system.settings.contrast}
+						onToggle={(value) => system.updateSettings({ contrast: value })}
+						icons={[
+							<PhosphorIcons.Moon color={system.settings.colors.buttonColor} />,
+							<PhosphorIcons.Sun color={system.settings.colors.buttonColor} />
+						]}
+					/>
+
 				</div>
-				{/* <Editor spellCheck={spellCheck} /> */}
-				{/* <EditorContent /> */}
 				<Editor spellCheck={spellCheck} />
 			</div>
 		</Panel>

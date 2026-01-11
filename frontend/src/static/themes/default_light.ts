@@ -7,9 +7,7 @@ export const settings_default_light: Settings = {
 		buttonColor: '#3d4a53',
 		editorBackgroundHi: '#55697eff',
 		editorBackgroundLo: '#3d4a53ff',
-		// editorBackgroundHi: '#55697eff',
-		// editorBackgroundLo: '#3d4a53ff',
-		editorColor: '#bfe0ffff',
+		editorColor: '#d4f2ffff',
 		effectEditorColor: '#e1dcbaff',
 		inputBackground: '#d4d8d1ff',
 		selectedColor: '#d6efffff',
@@ -25,7 +23,7 @@ export const settings_default_light: Settings = {
 		mezzoDark: '#52555cff',
 		red: '#a43434ff',
 		blue: '#3457a4ff',
-		blueAccent: "#96d7ffff",
+		blueAccent: "#6bb5fbff",
 		yellow: '#e9cf68ff',
 		green: '#0b7233ff',
 
@@ -35,4 +33,5 @@ export const settings_default_light: Settings = {
 	horizontalLayout: false,
 	userChars: '',
 	spellCheck: true,
+	contrast: false,
 }

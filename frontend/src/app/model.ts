@@ -74,6 +74,7 @@ export type Settings = {
 	horizontalLayout: boolean
 	userChars: string
 	spellCheck: boolean
+	contrast: boolean
 
 }
 

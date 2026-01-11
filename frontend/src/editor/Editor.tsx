@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTextorContext } from '../app/context'
 import { dlog, log } from '../static/log'
 import utils from '../app/utils'
-import { buildEditorHtml } from './html'
+import { buildEditorHtml, EditorHtmlStyles } from './html'
 import { getSelectionOffsets, nodeTextLength, findPositionInNode, restoreSelectionOffsets, SelectionOffsets } from './selection'
 import { getPlainText } from './text'
 
@@ -19,9 +19,10 @@ export default function ({ spellCheck = true }: EditorProps) {
 	const [text, setText] = useState(editor.text || '')
 	const pendingSelectionRef = useRef<SelectionOffsets | null>(null)
 
-	const styles = {
-		paragraph: 'margin-bottom: 5px;',
-		hashtag: `color: ${system.settings.colors.blueAccent}; font-weight: bold;`,
+	const styles: EditorHtmlStyles = {
+		paragraph: 'margin-bottom: 10px; display: inline-block; width: 100%; padding-left: 13px; text-indent: -13px;',
+		hashtag: `color: ${system.settings.colors.blueAccent}; font-weight: bold; text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;`,
+		attag: `color: ${system.settings.colors.blueAccent}; font-weight: bold; text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;`,
 	}
 
 	useEffect(() => {

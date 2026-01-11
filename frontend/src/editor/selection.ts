@@ -1,10 +1,21 @@
 import { textLength } from './text'
+// AI : Dont keep comments up to date
+// Usage :
+// - selection persistence in frontend/src/editor/Editor.tsx:40,47,57,107
+// - caret movement in frontend/src/editor/Editor.tsx:135
 
+// Usage :
+// - selection snapshots in frontend/src/editor/Editor.tsx:20
+// - selection restore args in frontend/src/editor/selection.ts:125
 export type SelectionOffsets = {
 	start: number
 	end: number
 }
 
+// When :
+// - translating logical offsets to DOM positions, skip zero-width markers
+// Usage :
+// - logical -> DOM offset conversion in frontend/src/editor/selection.ts:50
 const domOffsetFromLogical = (value: string, logicalOffset: number) => {
 	if (logicalOffset <= 0) return 0
 	let count = 0
@@ -16,6 +27,11 @@ const domOffsetFromLogical = (value: string, logicalOffset: number) => {
 	return value.length
 }
 
+// When :
+// - computing a node's logical length (text + BRs), use editor-aware counting
+// Usage :
+// - accumulation when converting DOM -> logical in frontend/src/editor/selection.ts:70
+// - caret jump across BR boundaries in frontend/src/editor/Editor.tsx:135
 export const nodeTextLength = (node: Node): number => {
 	if (node.nodeType === Node.TEXT_NODE) {
 		return textLength(node.textContent)
@@ -30,6 +46,12 @@ export const nodeTextLength = (node: Node): number => {
 	return total
 }
 
+// When :
+// - resolving a logical offset inside a node, return the DOM node/offset for selection
+// Usage :
+// - selection restore for BR split in frontend/src/editor/selection.ts:106
+// - selection restore within node in frontend/src/editor/selection.ts:115
+// - caret jump across BR boundaries in frontend/src/editor/Editor.tsx:135
 export const findPositionInNode = (node: Node, offset: number) => {
 	const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT)
 	let current: Node | null = walker.nextNode()
@@ -46,6 +68,11 @@ export const findPositionInNode = (node: Node, offset: number) => {
 	return { node, offset: 0 }
 }
 
+// When :
+// - storing selection, convert a DOM node/offset into a logical offset from root
+// Usage :
+// - selection start calc in frontend/src/editor/selection.ts:144
+// - selection end calc in frontend/src/editor/selection.ts:145
 const offsetFromPosition = (root: HTMLElement, node: Node, offset: number) => {
 	let total = 0
 	const walk = (current: Node): boolean => {
@@ -78,6 +105,11 @@ const offsetFromPosition = (root: HTMLElement, node: Node, offset: number) => {
 	return total
 }
 
+// When :
+// - restoring selection, map a logical offset to the closest DOM position under root
+// Usage :
+// - selection start resolve in frontend/src/editor/selection.ts:128
+// - selection end resolve in frontend/src/editor/selection.ts:129
 const resolveSelectionPoint = (root: HTMLElement, offset: number) => {
 	const nodes = Array.from(root.childNodes)
 	if (nodes.length === 0) {
@@ -107,6 +139,10 @@ const resolveSelectionPoint = (root: HTMLElement, offset: number) => {
 	return { node: last, offset: last.childNodes.length }
 }
 
+// When :
+// - rehydrating selection after DOM changes, apply stored logical offsets
+// Usage :
+// - post-HTML rebuild selection restore in frontend/src/editor/Editor.tsx:47
 export const restoreSelectionOffsets = (root: HTMLElement, offsets: SelectionOffsets) => {
 	const selection = window.getSelection()
 	if (!selection) return
@@ -119,6 +155,12 @@ export const restoreSelectionOffsets = (root: HTMLElement, offsets: SelectionOff
 	selection.addRange(range)
 }
 
+// When :
+// - capturing selection state, return logical offsets relative to the editor root
+// Usage :
+// - before HTML rebuild in frontend/src/editor/Editor.tsx:40
+// - before manual insert in frontend/src/editor/Editor.tsx:57
+// - before backspace handling in frontend/src/editor/Editor.tsx:107
 export const getSelectionOffsets = (root: HTMLElement) => {
 	const selection = window.getSelection()
 	if (!selection || selection.rangeCount === 0) return null
