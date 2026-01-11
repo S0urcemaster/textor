@@ -128,6 +128,24 @@ export default function ({ spellCheck = true }: EditorProps) {
 				}
 			}
 		}
+		if (event.key === 'Delete') {
+			const offsets = editorRef.current ? getSelectionOffsets(editorRef.current) : null
+			if (offsets && offsets.start === offsets.end) {
+				const current = getCurrentText()
+				if (current[offsets.start] === '\n' || current[offsets.start] === '\v') {
+					event.preventDefault()
+					const nextText = `${current.slice(0, offsets.start)}${current.slice(offsets.end + 1)}`
+					pendingSelectionRef.current = {
+						start: offsets.start,
+						end: offsets.start,
+					}
+					setText(nextText)
+					setHtml(buildEditorHtml(nextText, styles))
+					editor.setText(nextText)
+					return
+				}
+			}
+		}
 		if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
 			const selection = window.getSelection()
 			if (selection?.isCollapsed && selection.anchorNode?.nodeType === Node.TEXT_NODE) {
