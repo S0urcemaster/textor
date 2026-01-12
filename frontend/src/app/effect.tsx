@@ -161,6 +161,8 @@ Your former User content : \n${system.documentsBackup}`)
 	}
 
 	const columns = { selected: '201px 1fr', unselected: '299px 1fr' }
+	const effectBackground = `linear-gradient(to top, ${system.settings.contrast ? system.settings.colors.editorBackgroundLoDark : system.settings.colors.editorBackgroundLoLight}, ${system.settings.contrast ? system.settings.colors.editorBackgroundHiDark : system.settings.colors.editorBackgroundHiLight})`
+	const effectTextColor = system.settings.contrast ? system.settings.colors.effectEditorColorDark : system.settings.colors.effectEditorColorLight
 
 	return (
 		<Panel>
@@ -171,7 +173,7 @@ Your former User content : \n${system.documentsBackup}`)
 						<div style={{ display: 'flex', flexDirection: 'column', paddingRight: 2 }}>
 							<div style={{ display: 'flex', width: '100%', background: system.settings.colors.inputBackground, color: system.settings.colors.dark, marginTop: 0, marginBottom: 1, borderBottomLeftRadius: 2, padding: '0px 0px 0px 0px', gap: 1 }}>
 								<Input value={name} submit={nameChanged} style={{ width: '100%' }} />
-								<Input value={(id + 1).toString()} submit={idChanged} style={{ width: 49, textAlign: 'right', paddingRight: 10 }} />
+								<Input value={(id + 1).toString()} submit={idChanged} style={{ width: 49, textAlign: 'right', paddingRight: 10, borderLeft: `1px solid ${system.settings.colors.lightDark}` }} />
 							</div>
 
 							<textarea ref={textareaRef} disabled={selectedEffect === undefined}
@@ -187,11 +189,11 @@ Your former User content : \n${system.documentsBackup}`)
 								placeholder={'Select Effect'}
 								className={fonts[FONT_ROBOTO_MONO].className}
 								style={{
-									background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
+									background: effectBackground,
 									borderBottom: `1px solid ${system.settings.colors.lightDark}`,
-									borderTop: `1px solid ${system.settings.colors.effectEditorColor}`,
+									borderTop: `1px solid ${effectTextColor}`,
 									resize: 'none',
-									color: system.settings.colors.effectEditorColor,
+									color: system.settings.contrast ? system.settings.colors.editorColorDark : system.settings.colors.editorColorLight,
 									padding: '0px 2px 0px 8px',
 									marginLeft: 1,
 									marginBottom: 1,
@@ -237,7 +239,7 @@ Your former User content : \n${system.documentsBackup}`)
 					}
 				</div>
 
-				<div style={{ display: 'flex', position: 'relative', paddingRight: 3, background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoDark}, ${system.settings.colors.editorBackgroundHiDark})` }}>
+				<div style={{ display: 'flex', position: 'relative', paddingRight: 3, background: effectBackground }}>
 
 					<textarea onClick={() => effects.setSelectedId(id)}
 						value={effectText}
@@ -248,9 +250,8 @@ Your former User content : \n${system.documentsBackup}`)
 							height: '100%',
 							width: '100%',
 							resize: 'none',
-							// background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
-							background: 'inherit',
-							color: system.settings.colors.effectEditorColor,
+							background: effectBackground,
+							color: effectTextColor,
 							padding: '2px 12px 0px 6px',
 							margin: '0px 0px 0px 2px',
 						}}
@@ -259,7 +260,7 @@ Your former User content : \n${system.documentsBackup}`)
 					<div style={{
 						inset: 0,
 						position: 'absolute',
-						background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
+						background: effectBackground,
 						opacity: opacity,
 						transition: `opacity ${updateTransitionMs}ms ease-in-out`,
 						pointerEvents: 'none'

@@ -22,7 +22,7 @@ export default ({ value, onChange }: { value: string, onChange: (value: string) 
             resize: 'none',
             paddingLeft: 10,
             background: `linear-gradient(to top, ${system.settings.colors.editorBackgroundLoLight}, ${system.settings.colors.editorBackgroundHiLight})`,
-            color: system.settings.colors.effectEditorColor,
+            color: system.settings.colors.editorColorLight,
          }}
       />
    )

@@ -18,12 +18,20 @@ export default function ({ spellCheck = true }: EditorProps) {
 	const [html, setHtml] = useState<string | undefined>()
 	const [text, setText] = useState(editor.text || '')
 	const pendingSelectionRef = useRef<SelectionOffsets | null>(null)
+	const pendingFocusRef = useRef(false)
+	const historyRef = useRef<{ text: string; selection: SelectionOffsets | null }[]>([
+		{ text: editor.text || '', selection: null }
+	])
+	const historyIndexRef = useRef(0)
+	const isHistoryNavRef = useRef(false)
+
+	const useTagOutline = false
 
 	const styles: EditorHtmlStyles = {
 		paragraph: 'margin-bottom: 10px; display: inline-block; width: 100%; padding-left: 13px; text-indent: -13px;',
 		paragraphSoft: 'display: inline-block; width: 100%; padding-left: 13px; text-indent: -13px;',
-		hashtag: `color: ${system.settings.colors.blueAccent}; font-weight: bold; text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;`,
-		attag: `color: ${system.settings.colors.blueAccent}; font-weight: bold; text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;`,
+		hashtag: `color: ${system.settings.contrast ? system.settings.colors.editorHashtagColorDark : system.settings.colors.editorHashtagColorLight}; font-weight: bold;${useTagOutline ? ' text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;' : ''}`,
+		attag: `color: ${system.settings.contrast ? system.settings.colors.editorAttagColorDark : system.settings.colors.editorAttagColorLight}; font-weight: bold;${useTagOutline ? ' text-shadow: -0.5px 0 #444444, 0.5px 0 #444444, 0 -0.5px #444444, 0 0.5px #444444;' : ''}`,
 	}
 
 	useEffect(() => {
@@ -31,15 +39,30 @@ export default function ({ spellCheck = true }: EditorProps) {
 		if (next !== text) {
 			setText(next)
 			updateHtmlFromText(next, false)
+			historyRef.current = [{ text: next, selection: null }]
+			historyIndexRef.current = 0
 		} else if (html == null) {
 			updateHtmlFromText(next, false)
 		}
 	}, [editor.text])
 
+	useEffect(() => {
+		if (html == null) return
+		updateHtmlFromText(text)
+	}, [
+		system.settings.contrast,
+		system.settings.colors.editorHashtagColorLight,
+		system.settings.colors.editorHashtagColorDark,
+		system.settings.colors.editorAttagColorLight,
+		system.settings.colors.editorAttagColorDark,
+		useTagOutline
+	])
+
 	const updateHtmlFromText = (source: string, preserveSelection = true) => {
 		// Keep caret/selection stable across rebuilds of innerHTML.
 		if (preserveSelection) {
 			pendingSelectionRef.current = editorRef.current ? getSelectionOffsets(editorRef.current) : null
+			pendingFocusRef.current = !!editorRef.current && document.activeElement === editorRef.current
 		}
 		setHtml(buildEditorHtml(source, styles))
 	}
@@ -47,27 +70,74 @@ export default function ({ spellCheck = true }: EditorProps) {
 	useLayoutEffect(() => {
 		if (!pendingSelectionRef.current || !editorRef.current) return
 		restoreSelectionOffsets(editorRef.current, pendingSelectionRef.current)
+		if (pendingFocusRef.current) {
+			editorRef.current.focus()
+		}
 		pendingSelectionRef.current = null
+		pendingFocusRef.current = false
 	}, [html])
+
+	const pushHistory = (nextText: string, selection: SelectionOffsets | null) => {
+		if (isHistoryNavRef.current) return
+		const history = historyRef.current
+		const current = history[historyIndexRef.current]
+		if (current && current.text === nextText) {
+			history[historyIndexRef.current] = { text: nextText, selection }
+			return
+		}
+		const nextIndex = historyIndexRef.current + 1
+		historyRef.current = history.slice(0, nextIndex)
+		historyRef.current.push({ text: nextText, selection })
+		historyIndexRef.current = historyRef.current.length - 1
+	}
+
+	const applyHistoryEntry = (entry: { text: string; selection: SelectionOffsets | null }) => {
+		const selection = entry.selection ?? { start: entry.text.length, end: entry.text.length }
+		isHistoryNavRef.current = true
+		pendingSelectionRef.current = selection
+		pendingFocusRef.current = true
+		setText(entry.text)
+		setHtml(buildEditorHtml(entry.text, styles))
+		editor.setText(entry.text)
+		isHistoryNavRef.current = false
+	}
+
+	const undo = () => {
+		const nextIndex = historyIndexRef.current - 1
+		if (nextIndex < 0) return
+		historyIndexRef.current = nextIndex
+		const entry = historyRef.current[nextIndex]
+		if (entry) applyHistoryEntry(entry)
+	}
+
+	const redo = () => {
+		const nextIndex = historyIndexRef.current + 1
+		if (nextIndex >= historyRef.current.length) return
+		historyIndexRef.current = nextIndex
+		const entry = historyRef.current[nextIndex]
+		if (entry) applyHistoryEntry(entry)
+	}
 
 	const insertTextAtCursor = (insertText: string) => {
 		if (!editorRef.current) return false
 		const selection = window.getSelection()
-		if (!selection || selection.rangeCount === 0) return false
-		const range = selection.getRangeAt(0)
-		if (!editorRef.current.contains(range.commonAncestorContainer)) return false
-		const offsets = editorRef.current ? getSelectionOffsets(editorRef.current) : null
-		if (!offsets) return false
-		const { start, end } = offsets
+		const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
+		const offsets = editorRef.current && range && editorRef.current.contains(range.commonAncestorContainer)
+			? getSelectionOffsets(editorRef.current)
+			: null
 
 		setText(prevText => {
+			const { start, end } = offsets ?? { start: prevText.length, end: prevText.length }
 			const nextText = `${prevText.slice(0, start)}${insertText}${prevText.slice(end)}`
-			pendingSelectionRef.current = {
+			const nextSelection = {
 				start: start + insertText.length,
 				end: start + insertText.length
 			}
+			pendingSelectionRef.current = nextSelection
+			pendingFocusRef.current = true
 			setHtml(buildEditorHtml(nextText, styles))
 			editor.setText(nextText)
+			pushHistory(nextText, nextSelection)
 			return nextText
 		})
 	}
@@ -82,16 +152,28 @@ export default function ({ spellCheck = true }: EditorProps) {
 	const handleInput = () => {
 		if (!editorRef.current) return
 		const nextText = getPlainText(editorRef.current).replace(/\r\n/g, '\n')
+		const selection = getSelectionOffsets(editorRef.current)
 
 		setText(() => {
 			updateHtmlFromText(nextText)
 			editor.setText(nextText)
+			pushHistory(nextText, selection)
 			return nextText
 		})
 	}
 
 	const handleBeforeInput = (event: React.FormEvent<HTMLDivElement>) => {
 		const inputEvent = event.nativeEvent as InputEvent
+		if (inputEvent.inputType === 'historyUndo') {
+			inputEvent.preventDefault()
+			undo()
+			return
+		}
+		if (inputEvent.inputType === 'historyRedo') {
+			inputEvent.preventDefault()
+			redo()
+			return
+		}
 		if (inputEvent.inputType === 'insertParagraph') {
 			inputEvent.preventDefault()
 			insertTextAtCursor('\n')
@@ -110,6 +192,20 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
+			event.preventDefault()
+			if (event.shiftKey) {
+				redo()
+			} else {
+				undo()
+			}
+			return
+		}
+		if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'y') {
+			event.preventDefault()
+			redo()
+			return
+		}
 		if (event.key === 'Backspace') {
 			const offsets = editorRef.current ? getSelectionOffsets(editorRef.current) : null
 			if (offsets && offsets.start === offsets.end && offsets.start > 0) {
@@ -117,13 +213,16 @@ export default function ({ spellCheck = true }: EditorProps) {
 				if (current[offsets.start - 1] === '\n' || current[offsets.start - 1] === '\v') {
 					event.preventDefault()
 					const nextText = `${current.slice(0, offsets.start - 1)}${current.slice(offsets.end)}`
-					pendingSelectionRef.current = {
+					const nextSelection = {
 						start: offsets.start - 1,
 						end: offsets.start - 1,
 					}
+					pendingSelectionRef.current = nextSelection
+					pendingFocusRef.current = true
 					setText(nextText)
 					setHtml(buildEditorHtml(nextText, styles))
 					editor.setText(nextText)
+					pushHistory(nextText, nextSelection)
 					return
 				}
 			}
@@ -135,13 +234,16 @@ export default function ({ spellCheck = true }: EditorProps) {
 				if (current[offsets.start] === '\n' || current[offsets.start] === '\v') {
 					event.preventDefault()
 					const nextText = `${current.slice(0, offsets.start)}${current.slice(offsets.end + 1)}`
-					pendingSelectionRef.current = {
+					const nextSelection = {
 						start: offsets.start,
 						end: offsets.start,
 					}
+					pendingSelectionRef.current = nextSelection
+					pendingFocusRef.current = true
 					setText(nextText)
 					setHtml(buildEditorHtml(nextText, styles))
 					editor.setText(nextText)
+					pushHistory(nextText, nextSelection)
 					return
 				}
 			}
@@ -207,8 +309,8 @@ export default function ({ spellCheck = true }: EditorProps) {
 			switch (name) {
 				case 'insert': {
 					const content = payload ?? ''
-					insertTextAtCursor(content)
 					editorRef.current?.focus()
+					insertTextAtCursor(content)
 					break
 				}
 				case 'clear': {

@@ -9,7 +9,7 @@ Module:
 	- React
 	- Codemirror (wird ersetzt)
 	- random-words
-	- @playwright/test
+	- playwright/test
 	- kein lint
 
 ## frontend/ Web Frontend

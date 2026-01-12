@@ -1,7 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from "react"
 import { useTextorContext } from "../app/context"
 import { robotoMonoFont } from "../static/constants"
-import { lib } from "../static/lib"
 
 export default ({ value, submit, style, placeholder, autoSubmit = false, ...props }: { value: string, submit: (value: string) => void, style?: CSSProperties, placeholder?: string, autoSubmit?: boolean } & React.InputHTMLAttributes<HTMLInputElement>) => {
 
@@ -45,8 +44,12 @@ export default ({ value, submit, style, placeholder, autoSubmit = false, ...prop
             if (props.onChange) props.onChange(e)
          }}
          style={{
-            height: 49, background: `linear-gradient(to top, ${lib.averageHexColor(system.settings.colors.editorBackgroundLoLight, '#646464ff')}, 
-            ${system.settings.colors.editorBackgroundHiLight})`, color: system.settings.colors.editorColorLight, padding: '0px 5px 0px 10px', fontSize: 'larger',
+            height: 49,
+            background: `linear-gradient(to top, ${system.settings.contrast ? system.settings.colors.editorBackgroundLoDark : system.settings.colors.editorBackgroundLoLight}, 
+            ${system.settings.contrast ? system.settings.colors.editorBackgroundHiDark : system.settings.colors.editorBackgroundHiLight})`,
+            color: system.settings.contrast ? system.settings.colors.editorColorDark : system.settings.colors.editorColorLight,
+            padding: '0px 5px 0px 10px',
+            fontSize: 'larger',
             ...style
          }}
          onKeyDown={e => {

@@ -50,7 +50,12 @@ export type Settings = {
 		editorBackgroundLoDark: string
 		editorColorLight: string
 		editorColorDark: string
-		effectEditorColor: string
+		editorHashtagColorLight: string
+		editorHashtagColorDark: string
+		editorAttagColorLight: string
+		editorAttagColorDark: string
+		effectEditorColorLight: string
+		effectEditorColorDark: string
 		inputBackground: string
 		materialMedian: string
 		materialHi: string
