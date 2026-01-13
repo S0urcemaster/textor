@@ -9,14 +9,8 @@ import useEffectsManagement from './hooks/effectsContext'
 import useEditorState from './hooks/editorContext'
 import useVaultState from './hooks/vaultContext'
 import utils, { UpdateStrategy } from './utils'
-import { effect_caesar_cypher } from '../static/documents/effects/caesar_cypher'
-import { document_openai } from '../static/documents/effects/openai'
-import { document_updates } from '../static/documents/system/updates'
 import { document_vault } from '../static/documents/system/vault'
-import { document_default } from '../static/documents/default'
-import { document_paginator } from '../static/documents/effects/paginator'
 import { document_vault_export_instruction } from '../static/documents/system/vault'
-import { document_settings } from '../static/documents/system/settings'
 
 export type TextorContext = {
 	files: {

@@ -22,10 +22,21 @@ export default function () {
 	}, [files.documents])
 
 	useEffect(() => {
+		if (!files.currentDocument) return
+		setCurrentFolder(files.currentDocument.folderName)
+		setCurrentFile(files.currentDocument.name)
+	}, [files.currentDocument?.folderName, files.currentDocument?.name])
+
+	useEffect(() => {
+		const currentDocFolder = files.currentDocument?.folderName
+		if (currentDocFolder && availableFolders.includes(currentDocFolder)) {
+			setCurrentFolder(currentDocFolder)
+			return
+		}
 		if (!currentFolder || !availableFolders.includes(currentFolder)) {
 			setCurrentFolder(availableFolders[0] ?? '')
 		}
-	}, [availableFolders])
+	}, [availableFolders, files.currentDocument?.folderName])
 
 	useEffect(() => {
 		if (currentFolder) {
@@ -36,8 +47,13 @@ export default function () {
 	}, [currentFolder])
 
 	useEffect(() => {
-		if (currentFile && !availableFiles.includes(currentFile)) setCurrentFile('')
-	}, [availableFiles])
+		if (!currentFolder) return
+		if (files.currentDocument && files.currentDocument.folderName === currentFolder) {
+			setCurrentFile(files.currentDocument.name)
+			return
+		}
+		setCurrentFile('')
+	}, [availableFiles, currentFolder, files.currentDocument?.folderName, files.currentDocument?.name])
 
 
 

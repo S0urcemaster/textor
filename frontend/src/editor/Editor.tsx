@@ -118,13 +118,17 @@ export default function ({ spellCheck = true }: EditorProps) {
 		if (entry) applyHistoryEntry(entry)
 	}
 
-	const insertTextAtCursor = (insertText: string) => {
+	const insertTextAtCursor = (insertText: string, forcedOffsets?: SelectionOffsets | null) => {
 		if (!editorRef.current) return false
-		const selection = window.getSelection()
-		const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
-		const offsets = editorRef.current && range && editorRef.current.contains(range.commonAncestorContainer)
-			? getSelectionOffsets(editorRef.current)
-			: null
+		const offsets = forcedOffsets ?? (() => {
+			const selection = window.getSelection()
+			const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
+			return editorRef.current && range
+				&& editorRef.current.contains(range.startContainer)
+				&& editorRef.current.contains(range.endContainer)
+				? getSelectionOffsets(editorRef.current)
+				: null
+		})()
 
 		setText(prevText => {
 			const { start, end } = offsets ?? { start: prevText.length, end: prevText.length }
@@ -135,6 +139,12 @@ export default function ({ spellCheck = true }: EditorProps) {
 			}
 			pendingSelectionRef.current = nextSelection
 			pendingFocusRef.current = true
+			if (nextText === prevText && editorRef.current) {
+				restoreSelectionOffsets(editorRef.current, nextSelection)
+				editorRef.current.focus()
+				pushHistory(nextText, nextSelection)
+				return prevText
+			}
 			setHtml(buildEditorHtml(nextText, styles))
 			editor.setText(nextText)
 			pushHistory(nextText, nextSelection)
@@ -192,6 +202,11 @@ export default function ({ spellCheck = true }: EditorProps) {
 	}
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Tab' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+			event.preventDefault()
+			insertTextAtCursor('\t')
+			return
+		}
 		if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
 			event.preventDefault()
 			if (event.shiftKey) {
@@ -298,8 +313,9 @@ export default function ({ spellCheck = true }: EditorProps) {
 
 	const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
 		event.preventDefault()
+		const offsets = editorRef.current ? getSelectionOffsets(editorRef.current) : null
 		const text = event.clipboardData.getData('text/plain')
-		insertTextAtCursor(text)
+		insertTextAtCursor(text, offsets)
 	}
 
 	useEffect(() => {

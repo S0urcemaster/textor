@@ -41,46 +41,87 @@ export default function () {
 		}
 	}
 
-	return (
-		<div className="page" style={{ background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`, display: 'flex', flexDirection: system.settings.horizontalLayout ? 'row' : 'column', width: system.settings.width }}>
-
-			<div style={{ flex: 1 }}>
-				<Editor />
-				<Head menuClicked={menuClicked} />
-
+		return (
+			<div style={{
+				background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`,
+				display: 'grid', gridTemplateColumns: system.settings.horizontalLayout ? '1fr 2fr' : '1fr',
+				width: system.settings.width
+			}}>
+				{system.settings.horizontalLayout ? (
+					<>
+						<div style={{ flex: 1 }}>
+							{menuVisible && currentMenu === menuCommands.chars &&
+								<CharsPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.docs &&
+								<DocsPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.images &&
+								<ImagesPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.vault &&
+								<VaultPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.textor &&
+								<InfoPanel />
+							}
+							{effects.current?.map((instructions, ix) => {
+								const primary = instructions?.[0]
+								if (!primary) return null
+								return (
+									<Effect
+										key={ix}
+										id={ix}
+										name={primary.name}
+										sourceId={Number(primary.args?.[0])}
+										fullInstructions={instructions}
+									/>
+								)
+							})}
+						</div>
+						<div style={{ flex: 1 }}>
+							<Editor />
+							<Head menuClicked={menuClicked} />
+						</div>
+					</>
+				) : (
+					<>
+						<div style={{ flex: 1 }}>
+							<Editor />
+							<Head menuClicked={menuClicked} />
+						</div>
+						<div style={{ flex: 1 }}>
+							{menuVisible && currentMenu === menuCommands.chars &&
+								<CharsPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.docs &&
+								<DocsPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.images &&
+								<ImagesPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.vault &&
+								<VaultPanel />
+							}
+							{menuVisible && currentMenu === menuCommands.textor &&
+								<InfoPanel />
+							}
+							{effects.current?.map((instructions, ix) => {
+								const primary = instructions?.[0]
+								if (!primary) return null
+								return (
+									<Effect
+										key={ix}
+										id={ix}
+										name={primary.name}
+										sourceId={Number(primary.args?.[0])}
+										fullInstructions={instructions}
+									/>
+								)
+							})}
+						</div>
+					</>
+				)}
 			</div>
-
-			<div style={{ flex: 1 }}>
-
-				{menuVisible && currentMenu === menuCommands.chars &&
-					<CharsPanel />
-				}
-				{menuVisible && currentMenu === menuCommands.docs &&
-					<DocsPanel />
-				}
-				{menuVisible && currentMenu === menuCommands.images &&
-					<ImagesPanel />
-				}
-				{menuVisible && currentMenu === menuCommands.vault &&
-					<VaultPanel />
-				}
-				{menuVisible && currentMenu === menuCommands.textor &&
-					<InfoPanel />
-				}
-				{effects.current?.map((instructions, ix) => {
-					const primary = instructions?.[0]
-					if (!primary) return null
-					return (
-						<Effect
-							key={ix}
-							id={ix}
-							name={primary.name}
-							sourceId={Number(primary.args?.[0])}
-							fullInstructions={instructions}
-						/>
-					)
-				})}
-			</div>
-		</div>
-	)
-}
+		)
+	}

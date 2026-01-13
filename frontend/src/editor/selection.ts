@@ -165,7 +165,7 @@ export const getSelectionOffsets = (root: HTMLElement) => {
 	const selection = window.getSelection()
 	if (!selection || selection.rangeCount === 0) return null
 	const range = selection.getRangeAt(0)
-	if (!root.contains(range.commonAncestorContainer)) return null
+	if (!root.contains(range.startContainer) || !root.contains(range.endContainer)) return null
 	const start = offsetFromPosition(root, range.startContainer, range.startOffset)
 	const end = offsetFromPosition(root, range.endContainer, range.endOffset)
 	return { start, end }

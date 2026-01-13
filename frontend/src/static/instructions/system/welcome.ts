@@ -7,11 +7,11 @@ export const instruction_welcome: Instruction = {
 Take care before pressing "remote" -buttons !`
 
 		return `Welcome to Texᴛᴑʀ 😀
-            
-Tip of the day: Textor auto saves each time you pause
-Tip of the next day : You can duplicate files by renaming them
+Tip of day 1 : You can duplicate files by renaming them
+Tip of day 2 : Textor auto saves each time you pause
+Tip of day 3 : 
 
-texᴛᴑʀ is an early stage app that aims at productivity with writing texts
+Texᴛᴑʀ is an early stage app that aims at productivity with writing texts
 
 Everything you type stays local on your machine until you decide otherwise
 
