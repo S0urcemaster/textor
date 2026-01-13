@@ -53,6 +53,8 @@ export type TextorContext = {
 	system: {
 		documentsBackup: string
 		settings: Settings
+		backgroundAnimationRunning: boolean
+		toggleBackgroundAnimation: () => void
 		saveCurrentDocument: () => void
 		saveVault: (params: { newVault: Vault }) => void
 		updateSettings: (setting: any) => void
@@ -75,6 +77,7 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 	const documentsBackup = useRef('')
 
 	const [settings, setSettings] = useState<Settings>(defaultState.settings)
+	const [backgroundAnimationRunning, setBackgroundAnimationRunning] = useState(true)
 
 	const [editorActions, setEditorActions] = useState<EditorAction[]>([])
 
@@ -288,6 +291,9 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 		setSettings(nextSettings)
 	}
 
+	function toggleBackgroundAnimation() {
+		setBackgroundAnimationRunning((prev) => !prev)
+	}
 	function getVault() {
 
 		return vault
@@ -379,6 +385,8 @@ export function TextorContextProvider({ children }: { children: ReactNode }) {
 			system: {
 				documentsBackup: documentsBackup.current,
 				settings,
+				backgroundAnimationRunning,
+				toggleBackgroundAnimation,
 				saveCurrentDocument,
 				saveVault,
 				updateSettings,

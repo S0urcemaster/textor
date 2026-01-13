@@ -125,7 +125,6 @@ export default function () {
 	const { effects, system } = useTextorContext()
 	const [currentMenu, setCurrentMenu] = useState(menuCommands.chars)
 	const [menuVisible, setMenuVisible] = useState(true)
-	const [backgroundRunning, setBackgroundRunning] = useState(true)
 	// const [horizontalLayout, setHorizontalLayout] = useState(system.settings.horizontalLayout)
 
 	useEffect(() => {
@@ -158,8 +157,8 @@ export default function () {
 			width: system.settings.width,
 			position: "relative",
 			overflow: "hidden"
-		}} onClick={() => setBackgroundRunning((prev) => !prev)}>
-			<AppBackground opacity={0.35} running={backgroundRunning} />
+		}}>
+			<AppBackground opacity={0.35} running={system.backgroundAnimationRunning} />
 			<div style={{
 				position: "relative",
 				zIndex: 1,

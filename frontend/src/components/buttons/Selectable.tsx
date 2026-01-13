@@ -99,6 +99,8 @@ export default function ({ children, disabled, onActivate, trigger = 'click', st
         position: 'relative',
         userSelect: 'none',
       }}
+      role="button"
+      data-interactive="true"
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
       onMouseDown={onMouseDown}

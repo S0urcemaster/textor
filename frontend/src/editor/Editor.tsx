@@ -349,6 +349,7 @@ export default function ({ spellCheck = true }: EditorProps) {
 		<div
 			ref={editorRef}
 			contentEditable
+			data-interactive="true"
 			spellCheck={spellCheck}
 			suppressContentEditableWarning
 			onBeforeInput={handleBeforeInput}

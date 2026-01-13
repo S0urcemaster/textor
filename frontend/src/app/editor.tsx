@@ -18,10 +18,12 @@ const editorMenu = {
 	display: 'Editor',
 }
 
+let editorMenuState: keyof typeof editorMenu = 'font'
+
 export default function () {
 	const { editor, system } = useTextorContext()
 	const spellCheck = system.settings.spellCheck ?? true
-	const [currentEditorMenu, setCurrentEditorMenu] = useState<keyof typeof editorMenu>('font')
+	const [currentEditorMenu, setCurrentEditorMenu] = useState<keyof typeof editorMenu>(() => editorMenuState)
 
 	const fontNameReplace: Record<string, string> = {
 		[FONT_NOTO_SANS]: 'Noto Sans',
@@ -33,6 +35,10 @@ export default function () {
 	useEffect(() => {
 		log([dlog.teditor], '[editor.font.family]', editor.fontFamily)
 	}, [editor.fontFamily])
+
+	useEffect(() => {
+		editorMenuState = currentEditorMenu
+	}, [currentEditorMenu])
 
 	function onFontButton() {
 		editor.nextFamily()
