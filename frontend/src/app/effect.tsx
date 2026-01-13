@@ -166,12 +166,21 @@ Your former User content : \n${system.documentsBackup}`)
 
 	return (
 		<Panel>
-			<div className='effect' style={{ display: 'grid', gridTemplateColumns: id === effects.selectedId ? columns.unselected : columns.selected, background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`, borderRadius: 3 }}>
+			<div className='effect' style={{
+				display: 'grid',
+				gridTemplateColumns: id === effects.selectedId ? columns.unselected : columns.selected,
+				// background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`,
+				borderRadius: 3
+			}}>
 				<div style={{ display: 'flex', flexDirection: 'column' }}>
 
 					{id === effects.selectedId ?
 						<div style={{ display: 'flex', flexDirection: 'column', paddingRight: 2 }}>
-							<div style={{ display: 'flex', width: '100%', background: system.settings.colors.inputBackground, color: system.settings.colors.dark, marginTop: 0, marginBottom: 1, borderBottomLeftRadius: 2, padding: '0px 0px 0px 0px', gap: 1 }}>
+							<div style={{
+								display: 'flex', width: '100%', background: system.settings.colors.inputBackground,
+								color: system.settings.colors.dark, marginTop: 0, marginBottom: 1, borderBottomLeftRadius: 2,
+								padding: '0px 0px 0px 0px', gap: 1
+							}}>
 								<Input value={name} submit={nameChanged} style={{ width: '100%' }} />
 								<Input value={(id + 1).toString()} submit={idChanged} style={{ width: 49, textAlign: 'right', paddingRight: 10, borderLeft: `1px solid ${system.settings.colors.lightDark}` }} />
 							</div>
@@ -260,7 +269,7 @@ Your former User content : \n${system.documentsBackup}`)
 					<div style={{
 						inset: 0,
 						position: 'absolute',
-						background: effectBackground,
+						// background: effectBackground,
 						opacity: opacity,
 						transition: `opacity ${updateTransitionMs}ms ease-in-out`,
 						pointerEvents: 'none'

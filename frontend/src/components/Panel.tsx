@@ -4,17 +4,17 @@ import DeviceLine from "./DeviceLine"
 
 export default function ({ children, style }: { children: ReactNode, style?: CSSProperties }) {
 
-   const { system } = useTextorContext()
+	const { system } = useTextorContext()
 
-   return (
-      <>
-         {/* <DeviceLine /> */}
-         <div style={{background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`, padding: 1, borderRadius: 3,...style }}>
+	return (
+		<>
+			{/* <div style={{ background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`, padding: 1, borderRadius: 3, ...style }}> */}
+			<div style={{ padding: 1, borderRadius: 3, ...style }}>
 
-            {children}
+				{children}
 
-         </div>
-         <DeviceLine />
-      </>
-   )
+			</div>
+			{!system.settings.horizontalLayout && <DeviceLine />}
+		</>
+	)
 }

@@ -1,6 +1,5 @@
 import { useTextorContext } from "../app/context"
 import { SafetyButton } from "../components/buttons/SafetyButton"
-import ToggleButton from "../components/buttons/ToggleButton"
 import Panel from "../components/Panel"
 import phosphorIcons from "../static/svg/phosphorIcons"
 
@@ -9,20 +8,11 @@ export function InfoPanel() {
 	const { files, system } = useTextorContext()
 
 	return (
-		<Panel style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '1', color: system.settings.colors.accent }}>
-
+		<Panel style={{
+			display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '1',
+			color: system.settings.colors.accent
+		}}>
 			<div style={{ display: 'flex', flexDirection: 'column', gap: 1, justifyContent: 'flex-start', alignItems: 'start' }}>
-				<div>
-					<ToggleButton
-						title="layout"
-						value={system.settings.horizontalLayout}
-						onToggle={() => system.updateSettings({ horizontalLayout: !system.settings.horizontalLayout })}
-						icons={[
-							<phosphorIcons.SplitVertical color={system.settings.colors.buttonColor} />,
-							<phosphorIcons.SplitHorizontal color={system.settings.colors.buttonColor} />
-						]}
-					/>
-				</div>
 				<SafetyButton
 					onActivate={files.resetStorage}
 					icons={[
@@ -32,23 +22,23 @@ export function InfoPanel() {
 					captions={['fac rst', 'warng']}
 				/>
 			</div>
-			<div>
-				<p>
-					Textor is text workstation with a programmable effect section
-				</p>
-				<table style={{ width: '100%', borderCollapse: 'collapse', }}>
+			<div className="font-noto-sans" style={{ color: system.settings.colors.accent, paddingBottom: 5 }}>
+				<h1>
+					Textor Text Workstation
+				</h1>
+				<table style={{ width: '100%', borderCollapse: 'collapse', color: system.settings.colors.dark }}>
 					<tbody>
 						<tr>
-							<td>Idea<br />Design<br />Programming</td>
-							<td>
+							<td>Idea, Design, Programming</td>
+							<td style={{ fontWeight: 'bold' }}>
 								<a href="https://digi-craft.de" target="_blank" rel="noopener noreferrer">
-									Digi Craft
+									Sebastian Teister
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td>Buy me a coffee</td>
-							<td>
+							<td style={{ fontWeight: 'bold' }}>
 								<a href="https://coff.ee/sebastianteister" target="_blank" rel="noopener noreferrer">
 									coff.ee/sebastianteister
 								</a>
@@ -56,7 +46,7 @@ export function InfoPanel() {
 						</tr>
 						<tr>
 							<td>Donate at Paypal</td>
-							<td>
+							<td style={{ fontWeight: 'bold' }}>
 								<a href="https://paypal.me/snteister" target="_blank" rel="noopener noreferrer">
 									paypal.me/snteister
 								</a>

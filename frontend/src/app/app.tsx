@@ -8,13 +8,124 @@ import DocsPanel from '../panels/docsPanel'
 import { InfoPanel } from '../panels/infoPanel'
 import VaultPanel from '../panels/vaultPanel'
 import ImagesPanel from '../panels/imagesPanel'
+import DeviceLine from '../components/DeviceLine'
 
+type Glyph = {
+	id: string
+	char: string
+	x: number
+	y: number
+	size: number
+	color: string
+	duration: number
+	opacity: number
+}
+
+const pastelColors = [
+	"rgb(248, 197, 210)",
+	"rgb(196, 232, 210)",
+	"rgb(199, 218, 252)",
+	"rgb(252, 234, 188)",
+	"rgb(224, 204, 244)",
+	"rgb(191, 230, 240)"
+]
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+function AppBackground({ opacity = 0.35, running = true }: { opacity?: number, running?: boolean }) {
+
+	const containerRef = useRef<HTMLDivElement | null>(null)
+	const [glyphs, setGlyphs] = useState<Glyph[]>([])
+
+	useEffect(() => {
+		let active = true
+		let timer: number | undefined
+
+		if (!running) {
+			return () => {
+				active = false
+				if (timer) window.clearTimeout(timer)
+			}
+		}
+
+		const spawnGlyph = () => {
+			const rect = containerRef.current?.getBoundingClientRect()
+			const width = rect?.width ?? 420
+			const height = rect?.height ?? 260
+			const duration = 1000 + Math.random() * 2000
+			const id = `${Date.now()}-${Math.random()}`
+			const glyph: Glyph = {
+				id,
+				char: letters[Math.floor(Math.random() * letters.length)],
+				x: Math.random() * 100,
+				y: Math.random() * 100,
+				size: 24 + Math.random() * 36,
+				color: pastelColors[Math.floor(Math.random() * pastelColors.length)],
+				duration,
+				opacity
+			}
+
+			if (width > 0 && height > 0) {
+				setGlyphs((prev) => [...prev, glyph])
+				window.setTimeout(() => {
+					setGlyphs((prev) => prev.filter((item) => item.id !== id))
+				}, duration)
+			}
+		}
+
+		const schedule = () => {
+			if (!active) return
+			const delay = 55 + Math.random() * 105
+			timer = window.setTimeout(() => {
+				spawnGlyph()
+				schedule()
+			}, delay)
+		}
+
+		schedule()
+
+		return () => {
+			active = false
+			if (timer) window.clearTimeout(timer)
+		}
+	}, [opacity, running])
+
+	return (
+		<div ref={containerRef} style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 2 }}>
+			<style>{`
+				@keyframes infoPanelFade {
+					0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+					12% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+					100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+				}
+			`}</style>
+			{glyphs.map((glyph) => (
+				<span
+					key={glyph.id}
+					style={{
+						position: "absolute",
+						left: `${glyph.x}%`,
+						top: `${glyph.y}%`,
+						fontSize: glyph.size,
+						color: glyph.color,
+						opacity: glyph.opacity,
+						animation: `infoPanelFade ${glyph.duration}ms ease-out forwards`,
+						whiteSpace: "pre"
+					}}
+				>
+					{glyph.char}
+				</span>
+			))}
+		</div>
+	)
+}
 
 export default function () {
 
 	const { effects, system } = useTextorContext()
 	const [currentMenu, setCurrentMenu] = useState(menuCommands.chars)
 	const [menuVisible, setMenuVisible] = useState(true)
+	const [backgroundRunning, setBackgroundRunning] = useState(true)
 	// const [horizontalLayout, setHorizontalLayout] = useState(system.settings.horizontalLayout)
 
 	useEffect(() => {
@@ -41,11 +152,20 @@ export default function () {
 		}
 	}
 
-		return (
+	return (
+		<div style={{
+			background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`,
+			width: system.settings.width,
+			position: "relative",
+			overflow: "hidden"
+		}} onClick={() => setBackgroundRunning((prev) => !prev)}>
+			<AppBackground opacity={0.35} running={backgroundRunning} />
 			<div style={{
-				background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`,
-				display: 'grid', gridTemplateColumns: system.settings.horizontalLayout ? '1fr 2fr' : '1fr',
-				width: system.settings.width
+				position: "relative",
+				zIndex: 1,
+				display: 'grid',
+				gridTemplateColumns: system.settings.horizontalLayout ? '1fr 3px 2fr' : '1fr',
+				width: "100%"
 			}}>
 				{system.settings.horizontalLayout ? (
 					<>
@@ -79,9 +199,10 @@ export default function () {
 								)
 							})}
 						</div>
+						<DeviceLine vertical />
 						<div style={{ flex: 1 }}>
-							<Editor />
 							<Head menuClicked={menuClicked} />
+							<Editor />
 						</div>
 					</>
 				) : (
@@ -123,5 +244,6 @@ export default function () {
 					</>
 				)}
 			</div>
-		)
-	}
+		</div>
+	)
+}
