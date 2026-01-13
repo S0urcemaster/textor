@@ -2,7 +2,7 @@ import Editor from './editor'
 import Head, { menuCommands } from './head'
 import { useTextorContext } from './context'
 import Effect from './effect'
-import { useEffect, useRef, useState } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import CharsPanel from '../panels/charsPanel'
 import DocsPanel from '../panels/docsPanel'
 import { InfoPanel } from '../panels/infoPanel'
@@ -30,7 +30,9 @@ const pastelColors = [
 	"rgb(191, 230, 240)"
 ]
 
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+// const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
+// const letters = [..."TEXTORtextorDIGICRAFTdigicraft🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
+const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678901234567890🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
 
 function AppBackground({ opacity = 0.35, running = true }: { opacity?: number, running?: boolean }) {
 
@@ -93,29 +95,31 @@ function AppBackground({ opacity = 0.35, running = true }: { opacity?: number, r
 	return (
 		<div ref={containerRef} style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 2 }}>
 			<style>{`
-				@keyframes infoPanelFade {
-					0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-					12% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-					100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+					@keyframes infoPanelFade {
+						0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+						12% { opacity: var(--glyph-opacity); transform: translate(-50%, -50%) scale(1); }
+						100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+					}
+				`}</style>
+			{glyphs.map((glyph) => {
+				const glyphStyle: CSSProperties = {
+					position: "absolute",
+					left: `${glyph.x}%`,
+					top: `${glyph.y}%`,
+					fontSize: glyph.size,
+					color: glyph.color,
+					animation: `infoPanelFade ${glyph.duration}ms ease-out forwards`,
+					whiteSpace: "pre"
 				}
-			`}</style>
-			{glyphs.map((glyph) => (
-				<span
-					key={glyph.id}
-					style={{
-						position: "absolute",
-						left: `${glyph.x}%`,
-						top: `${glyph.y}%`,
-						fontSize: glyph.size,
-						color: glyph.color,
-						opacity: glyph.opacity,
-						animation: `infoPanelFade ${glyph.duration}ms ease-out forwards`,
-						whiteSpace: "pre"
-					}}
-				>
-					{glyph.char}
-				</span>
-			))}
+				return (
+					<span
+						key={glyph.id}
+						style={{ ...glyphStyle, ['--glyph-opacity']: `${glyph.opacity}` } as CSSProperties}
+					>
+						{glyph.char}
+					</span>
+				)
+			})}
 		</div>
 	)
 }
@@ -158,7 +162,10 @@ export default function () {
 			position: "relative",
 			overflow: "hidden"
 		}}>
-			<AppBackground opacity={0.35} running={system.backgroundAnimationRunning} />
+			<AppBackground
+				opacity={system.settings.contrast ? 0.35 : 0.2}
+				running={system.backgroundAnimationRunning}
+			/>
 			<div style={{
 				position: "relative",
 				zIndex: 1,
