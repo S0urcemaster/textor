@@ -30,11 +30,28 @@ const pastelColors = [
 	"rgb(191, 230, 240)"
 ]
 
+const darkPastelColors = [
+	"rgb(140, 48, 72)",
+	"rgb(24, 118, 86)",
+	"rgb(52, 86, 158)",
+	"rgb(146, 92, 28)",
+	"rgb(118, 58, 150)",
+	"rgb(18, 120, 138)"
+]
+
 // const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
 // const letters = [..."TEXTORtextorDIGICRAFTdigicraft🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
 const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678901234567890🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
 
-function AppBackground({ opacity = 0.35, running = true }: { opacity?: number, running?: boolean }) {
+function AppBackground({
+	opacity = 0.35,
+	running = true,
+	contrast = true
+}: {
+	opacity?: number
+	running?: boolean
+	contrast?: boolean
+}) {
 
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const [glyphs, setGlyphs] = useState<Glyph[]>([])
@@ -56,13 +73,14 @@ function AppBackground({ opacity = 0.35, running = true }: { opacity?: number, r
 			const height = rect?.height ?? 260
 			const duration = 1000 + Math.random() * 2000
 			const id = `${Date.now()}-${Math.random()}`
+			const palette = contrast ? pastelColors : darkPastelColors
 			const glyph: Glyph = {
 				id,
 				char: letters[Math.floor(Math.random() * letters.length)],
 				x: Math.random() * 100,
 				y: Math.random() * 100,
 				size: 24 + Math.random() * 36,
-				color: pastelColors[Math.floor(Math.random() * pastelColors.length)],
+				color: palette[Math.floor(Math.random() * palette.length)],
 				duration,
 				opacity
 			}
@@ -90,7 +108,7 @@ function AppBackground({ opacity = 0.35, running = true }: { opacity?: number, r
 			active = false
 			if (timer) window.clearTimeout(timer)
 		}
-	}, [opacity, running])
+	}, [opacity, running, contrast])
 
 	return (
 		<div ref={containerRef} style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 2 }}>
@@ -163,8 +181,9 @@ export default function () {
 			overflow: "hidden"
 		}}>
 			<AppBackground
-				opacity={system.settings.contrast ? 0.35 : 0.2}
+				opacity={system.settings.contrast ? 0.5 : 0.2}
 				running={system.backgroundAnimationRunning}
+				contrast={system.settings.contrast}
 			/>
 			<div style={{
 				position: "relative",
