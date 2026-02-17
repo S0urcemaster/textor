@@ -41,7 +41,7 @@ const darkPastelColors = [
 
 // const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
 // const letters = [..."TEXTORtextorDIGICRAFTdigicraft🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
-const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678901234567890🙂😄😎🥰😋🥳🤠🤓🤪😮🤯"]
+const letters = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345678901234567890🙂"]
 
 function AppBackground({
 	opacity = 0.35,
