@@ -176,7 +176,7 @@ export default function () {
 	return (
 		<div className="appRoot" style={{
 			background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`,
-			width: `min(${system.settings.width}px, var(--app-max-width, 100vw))`,
+			width: `min(${system.settings.width}px, 100vw)`,
 			position: "relative",
 			overflow: "hidden"
 		}}>
