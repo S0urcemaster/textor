@@ -176,8 +176,7 @@ export default function () {
 	return (
 		<div style={{
 			background: `linear-gradient(to right, ${system.settings.colors.materialLo}, ${system.settings.colors.materialHi})`,
-			width: system.settings.width,
-			maxWidth: "100vw",
+			width: `min(${system.settings.width}px, 100vw)`,
 			position: "relative",
 			overflow: "hidden"
 		}}>
