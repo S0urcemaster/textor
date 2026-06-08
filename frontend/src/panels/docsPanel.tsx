@@ -8,7 +8,7 @@ import { dlog, log } from "../static/log"
 
 export default function () {
 
-	const { files } = useTextorContext()
+	const { files, system } = useTextorContext()
 
 	const [availableFiles, setAvailableFiles] = useState<string[]>([])
 	const [availableFolders, setAvailableFolders] = useState<string[]>([])
@@ -98,7 +98,7 @@ export default function () {
 	}
 
 	return (
-		<Panel style={{ display: 'grid', gridTemplateColumns: '4fr 12fr', gap: 1, height: 117 }}>
+		<Panel style={{ display: 'grid', gridTemplateColumns: '4fr 12fr', gap: 1, height: system.settings.horizontalLayout ? 468 : 234 }}>
 
 				<div style={{}}>
 					<FolderSelect options={availableFolders} value={currentFolder} onChange={setCurrentFolder} style={{ width: '100%', height: '100%' }} />
