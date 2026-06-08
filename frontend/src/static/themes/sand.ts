@@ -23,6 +23,7 @@ const theme: Settings = {
 
 		bright: '#b3d1e3',
 		accent: '#d6efffff',
+		accentButton: 'rgb(255, 251, 236)',
 		dark: '#1d1a22',
 		lightDark: '#68879bff',
 		materialMedian: 'rgb(182, 167, 154)',

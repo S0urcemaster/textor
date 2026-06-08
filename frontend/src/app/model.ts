@@ -64,6 +64,7 @@ export type Settings = {
 		selectedColor: string
 
 		accent: string
+		accentButton: string
 		blue: string
 		blueAccent: string
 		green: string

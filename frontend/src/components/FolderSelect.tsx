@@ -28,6 +28,9 @@ export default function ({ options, value, onChange, style, horizontal }: { opti
                   flex: 1,
                   height: 28,
                   justifyContent: 'center',
+                  background: system.settings.colors.accentButton,
+                  color: selectedValue === option ? system.settings.colors.accent : system.settings.colors.bright,
+                  fontWeight: selectedValue === option ? 'bold' : 'normal',
                } : {
                   width: '100%',
                   height: selectedValue === option ? 49 : 32,
@@ -35,7 +38,9 @@ export default function ({ options, value, onChange, style, horizontal }: { opti
                   paddingLeft: 6,
                }}
             >
-               {option}
+               {horizontal
+                  ? <span style={{ display: 'inline-block', transform: 'translateY(3px)' }}>{option}</span>
+                  : option}
             </Selectable>
          ))}
       </div>

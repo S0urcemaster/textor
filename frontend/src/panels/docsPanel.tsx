@@ -102,8 +102,26 @@ export default function () {
 
 				<FolderSelect options={availableFolders} value={currentFolder} onChange={setCurrentFolder} horizontal />
 
-				<div style={{ overflowY: 'scroll', flex: 1 }} >
-					<FileManager onChange={fileChanged} style={{ width: '100%', height: '100%' }} renamed={fileRenamed} files={availableFiles} value={currentFile} deleteClicked={deleteFileClicked} />
+				<div style={{ overflowY: 'scroll', flex: 1, position: 'relative' }} >
+					<div style={{
+						position: 'absolute',
+						bottom: 8,
+						left: 8,
+						right: 8,
+						fontSize: 11,
+						lineHeight: 1.7,
+						opacity: 0.3,
+						color: system.settings.colors.dark,
+						pointerEvents: 'none',
+						zIndex: 0,
+					}}>
+						<div>Renaming creates new document</div>
+						<div>Use it to rename or to create new documents</div>
+						<div>optionally delete the other file</div>
+					</div>
+					<div style={{ position: 'relative', zIndex: 1 }}>
+						<FileManager onChange={fileChanged} style={{ width: '100%', height: '100%' }} renamed={fileRenamed} files={availableFiles} value={currentFile} deleteClicked={deleteFileClicked} />
+					</div>
 				</div>
 		</Panel>
 	)

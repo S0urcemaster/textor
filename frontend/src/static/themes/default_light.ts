@@ -23,6 +23,7 @@ export const settings_default_light: Settings = {
 
 		bright: '#b3d1e3',
 		accent: '#d6efffff',
+		accentButton: '#485867',
 		dark: '#1d1a22',
 		lightDark: '#68879bff',
 		materialMedian: 'rgb(182, 167, 154)',
