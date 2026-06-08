@@ -76,7 +76,7 @@ export default function () {
 	const editorPane = <Editor spellCheck={spellCheck} />
 	const controlsPane = (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-			<Button style={{ display: 'flex', textAlign: 'center', background: system.settings.colors.accentButton, color: system.settings.colors.bright }} onActivate={onEditorMenuSwitch} trigger='mousedown'>{editorMenu[currentEditorMenu]}</Button>
+			<Button style={{ display: 'flex', textAlign: 'center', background: system.settings.contrast ? system.settings.colors.accentButton : '#e1ebf6', color: system.settings.contrast ? system.settings.colors.bright : system.settings.colors.dark }} onActivate={onEditorMenuSwitch} trigger='mousedown'>{editorMenu[currentEditorMenu]}</Button>
 			{currentEditorMenu === 'font' ? (
 				<div style={{ display: 'flex', gap: 1, flexDirection: 'column' }}>
 					<Button style={{ display: 'flex', textAlign: 'center' }} onActivate={onFontButton} trigger='mousedown'>{fontNameReplace[editor.fontFamily] ?? 'Noto Sans'}</Button>

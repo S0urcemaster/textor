@@ -28,8 +28,10 @@ export default function ({ options, value, onChange, style, horizontal }: { opti
                   flex: 1,
                   height: 28,
                   justifyContent: 'center',
-                  background: system.settings.colors.accentButton,
-                  color: selectedValue === option ? system.settings.colors.accent : system.settings.colors.bright,
+                  background: system.settings.contrast ? system.settings.colors.accentButton : '#e1ebf6',
+                  color: system.settings.contrast
+                     ? selectedValue === option ? system.settings.colors.accent : system.settings.colors.bright
+                     : system.settings.colors.dark,
                   fontWeight: selectedValue === option ? 'bold' : 'normal',
                } : {
                   width: '100%',
