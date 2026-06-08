@@ -98,13 +98,11 @@ export default function () {
 	}
 
 	return (
-		<Panel style={{ display: 'grid', gridTemplateColumns: '4fr 12fr', gap: 1, height: system.settings.horizontalLayout ? 468 : 234 }}>
+		<Panel style={{ display: 'flex', flexDirection: 'column', gap: 1, height: system.settings.horizontalLayout ? 468 : 234 }}>
 
-				<div style={{}}>
-					<FolderSelect options={availableFolders} value={currentFolder} onChange={setCurrentFolder} style={{ width: '100%', height: '100%' }} />
-				</div>
+				<FolderSelect options={availableFolders} value={currentFolder} onChange={setCurrentFolder} horizontal />
 
-				<div style={{ overflowY: 'scroll' }} >
+				<div style={{ overflowY: 'scroll', flex: 1 }} >
 					<FileManager onChange={fileChanged} style={{ width: '100%', height: '100%' }} renamed={fileRenamed} files={availableFiles} value={currentFile} deleteClicked={deleteFileClicked} />
 				</div>
 		</Panel>

@@ -3,7 +3,7 @@ import { useTextorContext } from '../app/context'
 
 import Selectable from './buttons/Selectable'
 
-export default function ({ options, value, onChange, style }: { options: string[], value: string, onChange: (value: string) => void, style?: CSSProperties }) {
+export default function ({ options, value, onChange, style, horizontal }: { options: string[], value: string, onChange: (value: string) => void, style?: CSSProperties, horizontal?: boolean }) {
 
    const [selectedValue, setSelectedValue] = useState(value)
    const { system } = useTextorContext()
@@ -18,13 +18,17 @@ export default function ({ options, value, onChange, style }: { options: string[
    }
 
    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <div style={{ display: 'flex', flexDirection: horizontal ? 'row' : 'column', gap: 1, width: horizontal ? '100%' : undefined }}>
          {options?.map((option) => (
             <Selectable
                key={option}
                onActivate={() => handleSelect(option)}
                isSelected={selectedValue === option}
-               style={{
+               style={horizontal ? {
+                  flex: 1,
+                  height: 28,
+                  justifyContent: 'center',
+               } : {
                   width: '100%',
                   height: selectedValue === option ? 49 : 32,
                   justifyContent: 'flex-start',

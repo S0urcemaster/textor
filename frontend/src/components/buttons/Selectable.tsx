@@ -98,6 +98,9 @@ export default function ({ children, disabled, onActivate, trigger = 'click', st
         alignItems: 'center',
         position: 'relative',
         userSelect: 'none',
+        flex: style?.flex,
+        width: style?.width,
+        height: style?.height,
       }}
       role="button"
       data-interactive="true"

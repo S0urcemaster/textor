@@ -42,7 +42,7 @@ export const defaultState: App = {
 	version: '0.32',
 	documents: default_documents,
 	// light
-	settings: { ...settings_default_light, userChars: '↻⧘»⧘«⧘😅⧘🤔⧘😁⧘😆⧘😂⧘🥳⧘😉⧘😊⧘›⧘‹⧘➞⧘■⧘★⧘✱⧘…' }
+	settings: { ...settings_default_light, userChars: '…⧘»⧘«⧘😅⧘🤔⧘😁⧘😄⧘🤭⧘🧐⧘😉⧘😊⧘😋⧘😛⧘😶⧘😐⧘🫤⧘😑⧘🫡⧘🤭⧘🫢⧘🥱' }
 	// dark
 	,
 	vault: undefined

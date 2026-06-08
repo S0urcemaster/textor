@@ -18,7 +18,7 @@ export default ({ files, value, onChange, style, renamed, deleteClicked }: { fil
    }, [fileName])
 
    return (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 1 }}>
          {files?.map((option) =>
             fileName === option ?
                <div key={option} onMouseDown={() => onChange(option)} style={{
